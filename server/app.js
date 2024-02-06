@@ -1,8 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./model/userModel');
-
+const authRouter = require('./routes/authentication');
 const app = express();
 app.use(express.json());
 
@@ -11,9 +10,11 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
+// Authentication middleware
+app.use("/auth", authRouter);
 
 // Login endpoint
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -29,9 +30,8 @@ app.post('/login', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
 // Endpoint for adding a user
-app.post('/add-user', async (req, res) => {
+app.post("/add-user", async (req, res) => {
     try {
         const { username, password } = req.body;
         const userExists = await User.findOne({ username });
@@ -47,7 +47,7 @@ app.post('/add-user', async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
-});
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
