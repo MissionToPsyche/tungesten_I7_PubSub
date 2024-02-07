@@ -1,22 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import { Mainpage } from './Main/Mainpage'
-import { MuiNavbar } from './navbar/Navbar'
-import Login from "./Login/Login"
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Mainpage } from './components/Main/Mainpage'
+import { MuiNavbar } from './components/navbar/Navbar'
+import Login from "./components/Login/Login"
+import './App.css';
 
 function App() {
 
   return (
-
-//     <>
-//       <MuiNavbar></MuiNavbar>
-//       <Mainpage></Mainpage>
-//     </>
-    // <>
-    <Login></Login>
-    // </>
+    <div>
+      <Router>
+        <MuiNavbar />
+        <Routes>
+          <Route path="/" element={<Mainpage />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Router>
+    </div>
 
   )
 }
