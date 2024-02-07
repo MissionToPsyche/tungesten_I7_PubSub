@@ -1,8 +1,14 @@
+import styled from "styled-components"
 
-const UploadDoc = () => {
+export default function UploadDoc() {
     return (
-        <div>UploadDoc</div>
+        <UpHead>Upload Doc</UpHead>
     )
 }
 
-export default UploadDoc
+const UpHead = styled.h1`
+  font-size: 3rem;
+  margin-left: 2rem;
+  color: #333;
+  font-weight: normal;
+`

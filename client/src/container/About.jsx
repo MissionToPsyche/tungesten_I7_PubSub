@@ -1,8 +1,14 @@
+import styled from "styled-components"
 
-const About = () => {
+export default function About() {
   return (
-    <div>About</div>
+    <AboutHead>About</AboutHead>
   )
 }
 
-export default About
+const AboutHead = styled.h1`
+  font-size: 3rem;
+  margin-left: 2rem;
+  color: #333;
+  font-weight: normal;
+`
