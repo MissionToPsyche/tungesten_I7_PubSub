@@ -19,9 +19,23 @@ const userLogin = async (req, res) => {
 const addUser = async (req, res) => {
     try {
         const { username, password } = req.body;
+        // Checking if user already exists
         const userExists = await User.findOne({ username });
         if (userExists) {
             return res.status(400).send('A user already exists with this username. Please choose a different username.');
+        }
+        // Password validation
+        if (password.length < 8) {
+            return res.status(400).send('Password must have at least 8 characters.');
+        }
+        if (!containsSpecialCharacter(password)) {
+            return res.status(400).send('Password must contain at least one special character.');
+        }
+        if (!/[A-Z]/.test(password)) {
+            return res.status(400).send('Password must contain at least one uppercase letter.');
+        }
+        if (!/\d/.test(password)) {
+            return res.status(400).send('Password must contain at least one digit.');
         }
         const newUser = new User({
             username,
@@ -33,5 +47,16 @@ const addUser = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
+// Checking for special characters
+const specialCharacters = '!@#$%^&*(),.?":{}|<>';
+const containsSpecialCharacter = (key) => {
+    for (const char of specialCharacters) {
+        if (key.includes(char)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 module.exports = {userLogin, addUser};
