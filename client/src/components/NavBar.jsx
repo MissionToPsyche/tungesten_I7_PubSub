@@ -14,14 +14,20 @@ const NavBar = () => {
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <a href="https://psyche.asu.edu/">
+                        <a style={{}} href="https://www.nasa.gov/">
                             <img
-                                style={{ width: "70px" }}
-                                alt="Psyche"
+                                style={{ height: "68px" }}
+                                alt="NASA"
                                 src='https://psyche.asu.edu/wp-content/themes/psyche/static/img/nasa.svg'
                             />
                         </a>
-                        <a href="https://www.nasa.gov/"><img style={{ width: "100px" }} alt="Psyche" src='https://psyche.asu.edu/wp-content/themes/psyche/static/img/psyche.svg' /></a>
+                        <a href="https://psyche.asu.edu/">
+                            <img
+                                style={{ height: "68px" }}
+                                alt="Psyche"
+                                src='https://psyche.asu.edu/wp-content/themes/psyche/static/img/psyche.svg'
+                            />
+                        </a>
                         <Typography variant="h6" component="div">
 
                         </Typography>
