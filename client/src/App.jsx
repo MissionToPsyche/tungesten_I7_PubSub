@@ -18,6 +18,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/upload" element={<UploadDoc />} />
+          {/* TODO: <Route path="/login" element={<Login />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

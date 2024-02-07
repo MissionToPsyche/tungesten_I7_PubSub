@@ -38,7 +38,7 @@ const NavBar = () => {
                     <Button color="primary" onClick={() => navigate('/about')}>About</Button>
                     <Button color="primary" onClick={() => navigate('/upload')}>Upload-Doc</Button>
                     <Button color="primary" onClick={() => navigate('/dashboard')}>Dashboard</Button>
-                    <Button variant='contained' onClick={() => navigate('/upload')}>Login</Button>
+                    <Button variant='contained' onClick={() => navigate('/login')}>Login</Button>
                 </Box>
             </Toolbar>
         </AppBar>
