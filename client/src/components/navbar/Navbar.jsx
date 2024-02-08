@@ -1,18 +1,11 @@
 import {
     AppBar,
-    Box,
     Toolbar,
-    IconButton,
     Typography,
     Button,
     Stack,
-    Menu,
-    MenuItem
-} from '@mui/material'
-import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { useState } from 'react'
-import logo from "../../psycheLogo.png"
+} from '@mui/material';
+import logo from "../../assets/images/psycheLogo.png"
 export const MuiNavbar = () => {
 
     return (
@@ -32,11 +25,7 @@ export const MuiNavbar = () => {
                     <Button color='inherit'>My Uploads</Button>
                     <Button color='inherit'>Dashboard</Button>
                     <Button color='inherit'>Logout</Button>
-
-
-
                 </Stack>
-
             </Toolbar>
         </AppBar>
     )
