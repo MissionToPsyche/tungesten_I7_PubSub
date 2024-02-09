@@ -43,18 +43,18 @@ function Login() {
 		<ThemeProvider theme={defaultTheme}>
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
-				<Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-				<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-					<LockOutlinedIcon />
-				</Avatar>
+				<Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+						<LockOutlinedIcon />
+					</Avatar>
 					<Typography component="h1" variant="h5"> Login </Typography>
 					<Box component="form" noValidate sx={{ mt: 1 }}>
 						<TextField value={userName} margin="normal" onChange={userNameChanged} error={showUserNameError} required fullWidth id="userName" helperText={userNameErrorMessage} label="Username" name="userName" autoFocus />
 						<TextField value={password} margin="normal" onChange={passwordChanged} error={showPasswordError} required fullWidth name="password" helperText={passwordErrorMessage} label="Password" type="password" id="password" />
 						<Button fullWidth onClick={login} variant="contained" sx={{ mt: 3, mb: 2 }}> Login </Button>
 					</Box>
-			</Box>
-		</Container>
+				</Box>
+			</Container>
 		</ThemeProvider>
 	);
 }
