@@ -5,8 +5,8 @@ const {uploadDocument, getAllDocuments, getDocumentsByUsername} = require('../co
 docRouter.post('/upload', uploadDocument);
 
 // Endpoint for adding a user
-docRouter.post('/fetchAll', getAllDocuments);
+docRouter.get('/fetchAll', getAllDocuments);
 
-docRouter.post('/byOwner', getDocumentsByUsername);
+docRouter.get('/byOwner', getDocumentsByUsername);
 
 module.exports = docRouter;
