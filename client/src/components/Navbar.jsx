@@ -5,7 +5,7 @@ import {
     Button,
     Stack,
 } from '@mui/material';
-import logo from "../../assets/images/psycheLogo.png"
+import logo from "../assets/images/psycheLogo.png"
 export const MuiNavbar = () => {
 
     return (

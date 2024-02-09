@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Mainpage } from './components/Main/Mainpage'
-import { MuiNavbar } from './components/navbar/Navbar'
-import Login from "./components/Login/Login"
+import { Mainpage } from './components/Mainpage'
+import { MuiNavbar } from './components/Navbar'
+import Login from "./components/Login"
 import './App.css';
 
 function App() {
