@@ -7,7 +7,7 @@ router.post('/login', userLogin);
 // Endpoint for adding a user
 router.post('/add-user', addUser);
 
-router.put('/profile/update', updateProfile);
+//router.put('/profile/update', updateProfile);
 
 
 module.exports = router;
