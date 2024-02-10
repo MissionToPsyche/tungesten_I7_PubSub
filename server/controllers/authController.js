@@ -1,24 +1,27 @@
 const User = require('../model/userModel');
+const jwt = require('jsonwebtoken');
+
 const userLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).send('Authentication failed. User not found.');
+            return res.status(404).json({ message: 'User not found.' });
         }
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).send('Authentication failed. Wrong password.');
+            return res.status(401).json({ message: 'Invalid credentials.' });
         }
-        res.send('User logged in successfully');
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ message: 'User logged in successfully', token });
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ message: error.message });
     }
 };
 
 const addUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, full_name, date_of_birth, email } = req.body;
         // Checking if user already exists
         const userExists = await User.findOne({ username });
         if (userExists) {
@@ -39,7 +42,10 @@ const addUser = async (req, res) => {
         }
         const newUser = new User({
             username,
-            password
+            password,
+            full_name,
+            date_of_birth,
+            email
         });
         await newUser.save();
         res.status(201).send('User registered successfully');
@@ -47,6 +53,7 @@ const addUser = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
 
 // Checking for special characters
 const specialCharacters = '!@#$%^&*(),.?":{}|<>';
@@ -59,4 +66,4 @@ const containsSpecialCharacter = (key) => {
     return false;
 }
 
-module.exports = {userLogin, addUser};
+module.exports = { userLogin, addUser };
