@@ -7,6 +7,7 @@ import AddUser from './components/AddUser';
 import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
+import UpdateUser from './components/UpdateUser';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Mainpage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/adduser/" element={<AddUser />} />
+          <Route path="/updateUser/" element={<UpdateUser />} />
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/publications/" element={<Publications />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />

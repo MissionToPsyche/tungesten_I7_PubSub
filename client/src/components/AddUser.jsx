@@ -1,6 +1,6 @@
 
 export default function AddUser() {
-  return (
-    <div>AddUser</div>
-  )
+    return (
+        <div>AddUser</div>
+    )
 }

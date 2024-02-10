@@ -5,8 +5,12 @@ import {
     Button,
     Stack,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/images/psycheLogo.png"
-export const MuiNavbar = () => {
+
+
+export function MuiNavbar() {
+    const navigate = useNavigate();
 
     return (
         <AppBar position='static' color='transparent'>
@@ -17,16 +21,14 @@ export const MuiNavbar = () => {
                     PSYCHE
                 </Typography>
                 <Stack direction='row' spacing={2}>
-                    <Button color='inherit'>Home</Button>
-                    <Button color='inherit'>Publications</Button>
-                    <Button color='inherit'>Add User</Button>
-                    <Button color='inherit'>Upload Publication</Button>
-                    <Button color='inherit'>Show All Publications</Button>
-                    <Button color='inherit'>My Uploads</Button>
-                    <Button color='inherit'>Dashboard</Button>
-                    <Button color='inherit'>Logout</Button>
+                    <Button color='inherit' onClick={() => navigate('/')}>Home</Button>
+                    <Button color='inherit' onClick={() => navigate('/publications')}>Publications</Button>
+                    <Button color='inherit' onClick={() => navigate('/addUser')}>Add User</Button>
+                    <Button color='inherit' onClick={() => navigate('/uploaddoc')}>My Uploads</Button>
+                    <Button color='inherit' onClick={() => navigate('/dashboard')}>Dashboard</Button>
+                    <Button variant="outlined" onClick={() => navigate('/login')}>SignIn</Button>
                 </Stack>
             </Toolbar>
         </AppBar>
     )
-}
+} 
