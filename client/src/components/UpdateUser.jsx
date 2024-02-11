@@ -50,9 +50,7 @@ function UpdateUser() {
 					<Box component="form" noValidate sx={{ mt: 1 }}>
 						<TextField value={fullName} margin="normal" onChange={fullNameChanged} error={showFullNameError} required fullWidth id="fullName" helperText={fullNameErrorMessage} label="Full Name" name="fullName" />
 						<TextField value={email} margin="normal" onChange={emailChanged} error={showEmailError} required fullWidth name="email" helperText={emailErrorMessage} label="Email" type="email" id="email" />
-						<LocalizationProvider dateAdapter={AdapterDayjs}>
-							<DatePicker label="Date of Birth" />
-						</LocalizationProvider>
+						<TextField value={email} margin="normal" onChange={emailChanged} error={showEmailError} required fullWidth name="date" helperText={emailErrorMessage} label="Date of Birth" type="date" id="date" />
 						<Button fullWidth onClick={update} variant="contained" sx={{ mt: 3, mb: 2 }}> Update </Button>
 					</Box>
 				</Box>
