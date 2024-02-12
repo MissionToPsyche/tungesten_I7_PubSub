@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package user;
+
+// The user service definition.
+service UserService {
+  // Creates a new user
+  rpc AddUser (AddUserRequest) returns (UserResponse) {}
+
+  // Authenticates a user and returns a JWT token
+  rpc UserLogin (UserLoginRequest) returns (UserLoginResponse) {}
+
+  // Updates a user's profile
+  rpc UpdateUserProfile (UpdateUserProfileRequest) returns (UserResponse) {}
+
+  // Admin updates a user's details
+  rpc UpdateUserByAdmin (UpdateUserRequest) returns (UserResponse) {}
+
+  // Admin deletes a user
+  rpc DeleteUserByAdmin (DeleteUserRequest) returns (UserResponse) {}
+}
+
+// Message definitions for the requests and responses
+
+message AddUserRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message UserLoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message UpdateUserProfileRequest {
+  string userId = 1;
+  string password = 2; // Optional: Include only if allowing password updates
+  string profilePicture = 3; // Assuming the profile picture is a URL or base64 encoded data
+}
+
+message UpdateUserRequest {
+  string userId = 1;
+  map<string, string> updates = 2; // A map of fields to update and their new values
+}
+
+message DeleteUserRequest {
+  string userId = 1;
+}
+
+message UserResponse {
+  string message = 1;
+  string userId = 2; // Include the user ID in responses where applicable
+}
+
+message UserLoginResponse {
+  string token = 1;
+}
