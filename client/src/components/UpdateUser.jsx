@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useEffect } from 'react';
@@ -46,10 +45,6 @@ function UpdateUser() {
 		validateForm('fullName');
 		validateForm('date');
 		validateForm('email');
-		// setFullNameErrorFlag(true);
-		// setEmailErrorFlag(true);
-		// setFullNameErrorMessage("Full name doesn't exist.");
-		// setEmailErrorMessage("Email is wrong");
 	};
 
 	const fullNameChanged = (event) => {
@@ -64,6 +59,7 @@ function UpdateUser() {
 		setEmailErrorMessage("");
 	};
 
+	// the code below validates the form on each blur event
 	const validateForm = (element) => {
 		if(element === 'email'){
 			if(!email.length || (email.length > 0 && (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) == false))){
