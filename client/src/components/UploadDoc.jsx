@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import axios from 'axios';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Typography, TextField, Grid, Button } from "@mui/material"
 
 export default function UploadDoc() {
 
+    const [title, setTitle] = useState("");
     const [textInput, setTextInput] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -14,42 +16,17 @@ export default function UploadDoc() {
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
     };
-    const handleUpload = () => {
-        console.log('Uploading...');
-
-        // TODO: Upload the file to the server
-
-        // const formData = new FormData();
-
-        // if (selectedFile) {
-        //     // Add the selected file to the FormData object
-        //     formData.append('file', selectedFile);
-        // } else if (textInput) {
-        //     // Add the text input to the FormData object
-        //     formData.append('text', textInput);
-        // }
-
-        // // Add the selected option to the FormData object
-        // formData.append('option', selectedJsonFile);
-
-        // // Make a POST request to the Flask API
-        // axios.post('http://127.0.0.1:5000/api/post', formData)
-        //     .then(response => {
-        //         console.log(response.data);
-        //         setProcessedData(response.data);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
-    };
 
     return (
         <div>
-            <Typography variant="h3" sx={{ margin: '30px' }}>Upload Document</Typography>
+            <Typography variant="h3" sx={{ margin: '30px' }}>Upload Publication</Typography>
             <Grid container spacing={2} alignItems="center" direction="column">
                 <Grid item>
-                    <Typography variant="h6">
-                        Paste the Text or upload a file:
+                    <TextField variant="outlined" label="Title" type={"text"} onChange={e => setTitle(e.target.value)} />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h7">
+                        Paste Text or upload a file:
                     </Typography>
                 </Grid>
                 <Grid item>
@@ -91,10 +68,35 @@ export default function UploadDoc() {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleUpload}
                         disabled={!selectedFile && !textInput}
                         startIcon={<UploadIcon />}
                         style={{ backgroundColor: '#F57C33', color: 'white' }}
+                        onClick={async () => {
+                            const formData = new FormData();
+                            if (selectedFile) {
+                                formData.append('file', selectedFile);
+                            } else {
+                                formData.append('content', textInput);
+                            }
+                            formData.append('title', title);
+                            formData.append('ownerUsername', "testUser");
+
+                            try {
+                                await axios.post("http://localhost:3000/docs/upload", formData, {
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    }
+                                });
+                                alert("Publication uploaded successfully!");
+                            } catch (error) {
+                                if (error.response && error.response.data && error.response.data.message) {
+                                    alert(error.response.data.message);
+                                } else {
+                                    console.error(error);
+                                    alert("An error occurred while uploading the file.");
+                                }
+                            }
+                        }}
                     >
                         Upload
                     </Button>
