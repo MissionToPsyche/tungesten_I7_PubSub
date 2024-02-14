@@ -3,12 +3,14 @@ import axios from 'axios';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Typography, TextField, Grid, Button } from "@mui/material"
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function UploadDoc() {
 
     const [title, setTitle] = useState("");
     const [textInput, setTextInput] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleTextInputChange = (event) => {
         setTextInput(event.target.value);
@@ -65,41 +67,48 @@ export default function UploadDoc() {
                     )}
                 </Grid>
                 <Grid item>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={!selectedFile && !textInput}
-                        startIcon={<UploadIcon />}
-                        style={{ backgroundColor: '#F57C33', color: 'white' }}
-                        onClick={async () => {
-                            const formData = new FormData();
-                            if (selectedFile) {
-                                formData.append('file', selectedFile);
-                            } else {
-                                formData.append('content', textInput);
-                            }
-                            formData.append('title', title);
-                            formData.append('ownerUsername', "testUser");
-
-                            try {
-                                await axios.post("http://localhost:3000/docs/upload", formData, {
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    }
-                                });
-                                alert("Publication uploaded successfully!");
-                            } catch (error) {
-                                if (error.response && error.response.data && error.response.data.message) {
-                                    alert(error.response.data.message);
+                    {isLoading ? (
+                        <CircularProgress color='primary' thickness={4} />
+                    ) : (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={!selectedFile && !textInput || isLoading}
+                            startIcon={<UploadIcon />}
+                            style={{ backgroundColor: '#F57C33', color: 'white', width: '200px' }}
+                            onClick={async () => {
+                                setIsLoading(true);
+                                const formData = new FormData();
+                                if (selectedFile) {
+                                    formData.append('file', selectedFile);
                                 } else {
-                                    console.error(error);
-                                    alert("An error occurred while uploading the file.");
+                                    formData.append('content', textInput);
                                 }
-                            }
-                        }}
-                    >
-                        Upload
-                    </Button>
+                                formData.append('title', title);
+                                formData.append('ownerUsername', "testUser");
+
+                                try {
+                                    await axios.post("http://localhost:3000/docs/upload", formData, {
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        }
+                                    });
+                                    alert("Publication uploaded successfully!");
+                                } catch (error) {
+                                    if (error.response && error.response.data && error.response.data.message) {
+                                        alert(error.response.data.message);
+                                    } else {
+                                        console.error(error);
+                                        alert("An error occurred while uploading the file.");
+                                    }
+                                } finally {
+                                    setIsLoading(false);
+                                }
+                            }}
+                        >
+                            Upload
+                        </Button>
+                    )}
                 </Grid>
             </Grid>
 
