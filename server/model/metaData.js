@@ -5,3 +5,8 @@ const metaData = new mongoose.Schema({
     metadatype: { type: String, enum: ['COMMENT', 'DISC', 'FEED'], default: 'COMMENT' }
 
 });
+
+
+const MetaData = mongoose.model('MetaData', metaData);
+
+module.exports = MetaData;
