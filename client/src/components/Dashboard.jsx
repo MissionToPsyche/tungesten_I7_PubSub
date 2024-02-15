@@ -29,6 +29,8 @@ function Dashboard() {
                     <Typography variant="h5" component="h4" align="center" gutterBottom> Publications </Typography>
                     {isLoading ? (
                         <CircularProgress />
+                    ) : publications.length === 0 ? (
+                        <Typography variant="h6" component="h4" align="center" gutterBottom> No documents found </Typography>
                     ) : (
                         <Grid container spacing={4} justifyContent="center">
                             {publications?.map((publication) => (
