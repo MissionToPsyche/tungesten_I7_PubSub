@@ -6,19 +6,19 @@ function Dashboard() {
 
     const [publications, setPublications] = useState([]);
 
-    // const init = async () => {
-    //     const res = await axios.get("http://localhost:3000/docs/fetchAll", {
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     });
-    //     setPublications(res.data.documents);
-    //     console.log(res.data);
-    // }
+    const init = async () => {
+        const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        setPublications(res.data.documents);
+        console.log(res.data);
+    }
 
-    // useEffect(() => {
-    //     init();
-    // }, []);
+    useEffect(() => {
+        init();
+    }, []);
 
     return (
         <div>
