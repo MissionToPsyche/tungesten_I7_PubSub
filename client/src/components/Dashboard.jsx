@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Typography, Box, Grid, Card, CardContent } from "@mui/material";
+import { Typography, Box, Grid, Card, CardContent, CircularProgress } from "@mui/material";
 import axios from "axios";
 
 function Dashboard() {
 
     const [publications, setPublications] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const init = async () => {
         const res = await axios.get("http://localhost:3000/docs/fetchAll", {
@@ -13,7 +14,7 @@ function Dashboard() {
             }
         });
         setPublications(res.data.documents);
-        console.log(res.data);
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -26,24 +27,27 @@ function Dashboard() {
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
                 <Box maxWidth={800}>
                     <Typography variant="h5" component="h4" align="center" gutterBottom> Publications </Typography>
-                    <Grid container spacing={4} justifyContent="center">
-                        {publications?.map((publication) => (
-                            publication && (
-                                <Grid item xs={12} sm={6} md={4} key={publication.title}>
-                                    <Publicaiton publication={publication} />
-                                </Grid>
-                            )
-                        ))}
-                    </Grid>
+                    {isLoading ? (
+                        <CircularProgress />
+                    ) : (
+                        <Grid container spacing={4} justifyContent="center">
+                            {publications?.map((publication) => (
+                                publication && (
+                                    <Grid item xs={12} sm={6} md={4} key={publication.title}>
+                                        <Publicaiton publication={publication} />
+                                    </Grid>
+                                )
+                            ))}
+                        </Grid>
+                    )}
                 </Box>
             </Box>
         </div>
     )
 }
 
-function Publicaiton ({publication}) {
+function Publicaiton({ publication }) {
     const { title, content } = publication;
-    console.log(title, content);
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
