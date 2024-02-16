@@ -1,5 +1,5 @@
+require('dotenv').config();
 const crypto = require('crypto');
-
 const algorithm = 'aes-256-ctr';
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; // Ensure this is 32 bytes for aes-256-ctr
 const IV_LENGTH = 16; // For AES, this is always 16
@@ -35,4 +35,4 @@ const decryptRequest = (req, res, next) => {
     next();
 };
 
-module.exports = { decryptRequest, encrypt };
+module.exports = { decryptRequest, encrypt, decrypt };
