@@ -1,11 +1,9 @@
 
 const request = require('supertest');
-const httpMocks = require('node-mocks-http'); // Add this line
+const httpMocks = require('node-mocks-http');
 
-// Rest of your test file
 
 require('dotenv').config();
-// Assuming these tests are in a file located in the __tests__ folder
 
 
 const { userLogin, addUser } = require('../controllers/authController');
@@ -34,7 +32,7 @@ describe('Authentication Controller', () => {
             const req = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/users',
-                body: {
+                body: {   //validating the data
                     username: 'new_user',
                     password: 'Password@123',
                     full_name: 'New User',
@@ -54,7 +52,7 @@ describe('Authentication Controller', () => {
             const req = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/users',
-                body: {
+                body: { //validating for existing user
                     username: 'existing_user',
                     password: 'Password@123',
                     full_name: 'Existing User',

@@ -40,7 +40,7 @@ const addUser = async (req, res) => {
         if (!/\d/.test(password)) {
             return res.status(400).send('Password must contain at least one digit.');
         }
-        const newUser = new User({
+        const newUser = new User({ //newuser adding in the schema
             username,
             password,
             full_name,
