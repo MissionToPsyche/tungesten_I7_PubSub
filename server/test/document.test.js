@@ -54,7 +54,7 @@ describe('Document and DocumentVersion Models', () => {
   // The rest of your tests follow...
 });
 const { uploadDocument, getAllDocuments, getDocumentsByUsername } = require('../controllers/documentController');
-const Document = require('../model/documentModel');
+const Document2 = require('../model/documentModel');
 const httpMocks = require('node-mocks-http');
 
 jest.mock('../model/documentModel'); // Mock the Document model
@@ -67,8 +67,8 @@ describe('Document Controller', () => {
 
   describe('uploadDocument', () => {
     it('should upload a new document', async () => {
-      Document.findOne.mockResolvedValue(null); // Assume no document exists with the title
-      Document.prototype.save = jest.fn().mockResolvedValue({
+      Document2.findOne.mockResolvedValue(null); // Assume no document exists with the title
+      Document2.prototype.save = jest.fn().mockResolvedValue({
         title: 'Test Document 1',
         content: 'This is a test document content.',
         metadata: { ownerUsername: 'testuser' }
@@ -94,7 +94,7 @@ describe('Document Controller', () => {
     });
 
     it('should enforce title uniqueness', async () => {
-      Document.findOne.mockResolvedValue(true); // Simulate existing document
+      Document2.findOne.mockResolvedValue(true); // Simulate existing document
 
       const req = httpMocks.createRequest({
         body: {
@@ -118,7 +118,7 @@ describe('Document Controller', () => {
         { title: 'Document 1', content: 'Content for document 1', metadata: { ownerUsername: 'user1' } },
         { title: 'Document 2', content: 'Content for document 2', metadata: { ownerUsername: 'user2' } }
       ];
-      Document.find.mockResolvedValue(mockDocuments);
+      Document2.find.mockResolvedValue(mockDocuments);
 
       const req = httpMocks.createRequest({
         method: 'GET',
@@ -134,7 +134,7 @@ describe('Document Controller', () => {
     });
 
     it('should handle errors', async () => {
-      Document.find.mockRejectedValue(new Error('Failed to fetch documents'));
+      Document2.find.mockRejectedValue(new Error('Failed to fetch documents'));
 
       const req = httpMocks.createRequest();
       const res = httpMocks.createResponse();
