@@ -8,24 +8,30 @@ import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
 import UpdateUser from './components/UpdateUser';
+import AuthProvider from './providers/AuthProvider';
+import RoutesComp from './routes/RoutesComp';
 
 function App() {
 
   return (
-    <div>
-      <Router>
-        <MuiNavbar />
-        <Routes>
-          <Route path="/" element={<Mainpage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/adduser/" element={<AddUser />} />
-          <Route path="/updateUser/" element={<UpdateUser />} />
-          <Route path="/dashboard/" element={<Dashboard />} />
-          <Route path="/publications/" element={<Publications />} />
-          <Route path="/uploaddoc/" element={<UploadDoc />} />
-        </Routes>
-      </Router>
-    </div>
+	<AuthProvider>
+		{/* <MuiNavbar /> */}
+      <RoutesComp />
+    </AuthProvider>
+    // <div>
+    //   <Router>
+    //     <MuiNavbar />
+    //     <Routes>
+    //       <Route path="/" element={<Mainpage />} />
+    //       <Route path="/login" element={<Login />} />
+    //       <Route path="/adduser/" element={<AddUser />} />
+    //       <Route path="/updateUser/" element={<UpdateUser />} />
+    //       <Route path="/dashboard/" element={<Dashboard />} />
+    //       <Route path="/publications/" element={<Publications />} />
+    //       <Route path="/uploaddoc/" element={<UploadDoc />} />
+    //     </Routes>
+    //   </Router>
+    // </div>
 
   )
 }
