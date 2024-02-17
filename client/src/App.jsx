@@ -7,6 +7,7 @@ import AddUser from './components/AddUser';
 import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
+import Publication from './components/Publication';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/adduser/" element={<AddUser />} />
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/publications/" element={<Publications />} />
+          <Route path="/publication/:pubId" element={<Publication />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />
         </Routes>
       </Router>
