@@ -1,5 +1,3 @@
-
-const request = require('supertest');
 const httpMocks = require('node-mocks-http');
 
 
