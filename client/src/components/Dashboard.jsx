@@ -3,6 +3,7 @@ import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination 
 import axios from "axios";
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 function Dashboard() {
 
@@ -13,12 +14,23 @@ function Dashboard() {
 
     const init = async () => {
         setIsLoading(true);
-        const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+        /*const res = await axios.get("http://localhost:3000/docs/fetchAll", {
             headers: {
                 "Content-Type": "application/json"
             }
-        });
-        setPublications(res.data.documents);
+        });*/
+        const newarr = [
+            {
+                title: "one",
+                content: "conetent 1"
+            },
+            {
+                title: "two",
+                content: "content 2"
+            }
+        ]
+
+        setPublications(newarr);
         setIsLoading(false);
     }
 
@@ -62,6 +74,8 @@ function Dashboard() {
 
 function Publication({ publication }) {
     const { title, content } = publication;
+    const [shown, setShown] = useState(false);
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
@@ -73,6 +87,7 @@ function Publication({ publication }) {
                         <Typography variant="body2">
                             {content}
                         </Typography>
+                        <div><RemoveRedEyeIcon></RemoveRedEyeIcon></div>
                     </CardContent>
                 </Card>
             </div>
