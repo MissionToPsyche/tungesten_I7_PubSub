@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
+import React from 'react';
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 function Dashboard() {
 
