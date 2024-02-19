@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
+import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
 
 function Dashboard() {
 
@@ -20,8 +21,54 @@ function Dashboard() {
         setIsLoading(false);
     }
 
+    const newInitMethod = () => {
+        setIsLoading(true);
+        let arr = [{
+                title: "Document 1",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 2",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 3",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 4",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 5",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 6",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 7",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 8",
+                content: "New Content for testing the functionality."
+            },
+            {
+                title: "Document 9",
+                content: "New Content for testing the functionality."
+            }
+        ];
+        setPublications(arr);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }
+
     useEffect(() => {
-        init();
+        // init();
+        newInitMethod();
     }, []);
 
     const handleChange = (event, value) => {
@@ -49,7 +96,7 @@ function Dashboard() {
                                     )
                                 ))}
                             </Grid>
-                            <Pagination count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
+                            <Pagination sx={ { marginTop : 2 }} count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
                         </>
                     )}
                 </Box>
@@ -71,6 +118,9 @@ function Publication({ publication }) {
                         <Typography variant="body2">
                             {content}
                         </Typography>
+                        <div>
+                            <InsertCommentOutlinedIcon></InsertCommentOutlinedIcon>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
