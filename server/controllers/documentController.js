@@ -1,4 +1,4 @@
-const Document = require('../model/documentModel');
+const { Document, Comment } = require('../model/documentSchema');
 
 const uploadDocument = async (req, res) => {
   try {
