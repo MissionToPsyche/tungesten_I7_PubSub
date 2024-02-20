@@ -87,7 +87,7 @@ function Publication({ publication }) {
                         <Typography variant="body2">
                             {content}
                         </Typography>
-                        <div><RemoveRedEyeIcon></RemoveRedEyeIcon></div>
+                        <div><RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon></div>
                     </CardContent>
                 </Card>
             </div>

@@ -7,6 +7,10 @@ import AddUser from './components/AddUser';
 import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
+import ViewPDF from './components/viewPDF';
+
+
+
 
 function App() {
 
@@ -21,6 +25,7 @@ function App() {
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/publications/" element={<Publications />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />
+          <Route path="/ViewPDF/" element={<ViewPDF />} />
         </Routes>
       </Router>
     </div>
