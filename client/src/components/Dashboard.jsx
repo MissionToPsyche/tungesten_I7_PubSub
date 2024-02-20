@@ -34,11 +34,13 @@ function Dashboard() {
 		setIsLoading(true);
 		let arr = [{
 			title: "Document 1",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			comments: ['comment 1 for doc 1', 'comment 2 for doc 1']
 		},
 		{
 			title: "Document 2",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			comments: ['comment 1 for doc 2', 'comment 2 for doc 2']
 		},
 		{
 			title: "Document 3",
@@ -115,27 +117,23 @@ function Dashboard() {
 }
 
 function Publication({ publication }) {
-	const { title, content } = publication;
+	const { title, content, comments } = publication;
 
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
 	const openCommentBox = () => setIsCommentOpen(true);
-	const closeCommentBox = (action) => {
+	const closeCommentBox = (event, action) => {
 		if (action === 'submit') {
-			alert("data is sent to backend");
+			event.preventDefault();
+			let formData = new FormData(event.currentTarget);
+            let formJson = Object.fromEntries(formData.entries());
+            let newComment = formJson.newComment;
+            console.log(newComment);
+			if(newComment){
+				comments.push(newComment);
+			}
 		}
 		setIsCommentOpen(false);
 	}
-	const style = {
-		position: 'absolute',
-		top: '50%',
-		left: '50%',
-		transform: 'translate(-50%, -50%)',
-		width: 400,
-		bgcolor: 'background.paper',
-		border: '2px solid #000',
-		boxShadow: 24,
-		p: 4,
-	};
 
 	return (
 		<div>
@@ -154,8 +152,9 @@ function Publication({ publication }) {
 								open={isCommentOpen}
 								onClose={closeCommentBox}
 								PaperProps={{
+									comments: comments,
 									component: 'form',
-									onSubmit: () => closeCommentBox('submit')
+									onSubmit: (event) => closeCommentBox(event, 'submit')
 								}}
 							>
 								<DialogTitle>Comments</DialogTitle>
@@ -164,9 +163,11 @@ function Publication({ publication }) {
 									<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 										Comments for document : {title}
 									</Typography>
-									<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-										Demo comments will be filled with the data from backend if available.
-									</Typography>
+									{comments && comments.map((comment) => comment && (
+										<Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
+											{comment}
+										</Typography>
+									))}
 
 									</DialogContentText>
 									<TextField
