@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
 import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
-import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -130,6 +129,7 @@ function Publication({ publication }) {
             console.log(newComment);
 			if(newComment){
 				comments.push(newComment);
+				// api call for sending the comment to backend.
 			}
 		}
 		setIsCommentOpen(false);
