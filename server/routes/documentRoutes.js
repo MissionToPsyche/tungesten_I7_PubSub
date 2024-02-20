@@ -11,4 +11,6 @@ docRouter.get('/byOwner', getDocumentsByUsername);
 
 docRouter.post('/documents/:id/comments', postNewCommentOnTheDocument);
 
+docRouter.get('/documents/:id/comments', getCommentsForDocument);
+
 module.exports = docRouter;
