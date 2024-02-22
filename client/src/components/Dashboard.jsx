@@ -9,6 +9,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 
 function Dashboard() {
@@ -34,36 +36,44 @@ function Dashboard() {
 		let arr = [{
 			title: "Document 1",
 			content: "New Content for testing the functionality.",
-			comments: ['comment 1 for doc 1', 'comment 2 for doc 1']
+			comments: ['comment 1 for doc 1', 'comment 2 for doc 1'],
+			adminAccess: true
 		},
 		{
 			title: "Document 2",
 			content: "New Content for testing the functionality.",
-			comments: ['comment 1 for doc 2', 'comment 2 for doc 2']
+			comments: ['comment 1 for doc 2', 'comment 2 for doc 2'],
+			adminAccess: true
 		},
 		{
 			title: "Document 3",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: false
 		},
 		{
 			title: "Document 4",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: false
 		},
 		{
 			title: "Document 5",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: true
 		},
 		{
 			title: "Document 6",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: false
 		},
 		{
 			title: "Document 7",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: true
 		},
 		{
 			title: "Document 8",
-			content: "New Content for testing the functionality."
+			content: "New Content for testing the functionality.",
+			adminAccess: true
 		},
 		{
 			title: "Document 9",
@@ -84,6 +94,10 @@ function Dashboard() {
 	const handleChange = (event, value) => {
 		setPage(value);
 	};
+
+	useEffect(() => {
+		console.log(publications);
+	})
 
 	return (
 		<div>
@@ -116,9 +130,9 @@ function Dashboard() {
 }
 
 function Publication({ publication }) {
-	const { title, content, comments } = publication;
+	var { title, content, comments, adminAccess } = publication;
 
-	const [isCommentOpen, setIsCommentOpen] = useState(false);
+	var [isCommentOpen, setIsCommentOpen] = useState(false);
 	const openCommentBox = () => setIsCommentOpen(true);
 	const closeCommentBox = (event, action) => {
 		if (action === 'submit') {
@@ -135,6 +149,11 @@ function Publication({ publication }) {
 		setIsCommentOpen(false);
 	}
 
+	const setAdminAccess = (event) => {
+		console.log('clicked', event.target.checked)
+		adminAccess = event.target.checked;
+	}
+
 	return (
 		<div>
 			<div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
@@ -148,6 +167,12 @@ function Publication({ publication }) {
 						</Typography>
 						<div>
 							<InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+							<FormControlLabel
+								control={
+									<Switch checked={adminAccess} onChange={setAdminAccess} name="admin" />
+								}
+								label="Admin"
+								/>
 							<Dialog
 								open={isCommentOpen}
 								onClose={closeCommentBox}
@@ -184,6 +209,7 @@ function Publication({ publication }) {
 									<Button type="submit">Submit</Button>
 								</DialogActions>
 							</Dialog>
+
 						</div>
 					</CardContent>
 				</Card>
