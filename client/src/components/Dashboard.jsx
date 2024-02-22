@@ -4,6 +4,8 @@ import axios from "axios";
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useNavigate } from 'react-router-dom';
+
 
 function Dashboard() {
 
@@ -75,7 +77,7 @@ function Dashboard() {
 function Publication({ publication }) {
     const { title, content } = publication;
     const [shown, setShown] = useState(false);
-
+    const navigate = useNavigate();
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>

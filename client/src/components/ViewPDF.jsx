@@ -51,7 +51,7 @@ function ViewPDF() {
             </form>
             <h2>View PDF</h2>
             <div className='pdf-container'>
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                     {viewPdf && <>
                         <Viewer fileUrl={viewPdf} plugins={newplugin} />
                     </>}
