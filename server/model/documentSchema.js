@@ -19,6 +19,7 @@ const documentSchema = new mongoose.Schema({
     versions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DocumentVersion' }],
     createdAt: { type: Date, default: Date.now },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    fileUrl: { type: String }
 });
 
 const commentSchema = new mongoose.Schema({
