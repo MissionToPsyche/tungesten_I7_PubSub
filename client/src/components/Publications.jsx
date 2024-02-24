@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
+import FileViewer from "react-file-viewer";
+import file1 from "../assets/files/1.pdf"
 
 
 export default function Publications() {
@@ -69,6 +71,7 @@ function Publication({ publication }) {
                         <Typography variant="h5" component="div">
                             {title}
                         </Typography>
+                        <PreviewFile />
                         <Typography variant="body2">
                             {content}
                         </Typography>
@@ -79,3 +82,16 @@ function Publication({ publication }) {
     )
 }
 
+function PreviewFile() {
+    const file = file1;
+    const type = "pdf";
+
+    return (
+        <div>
+            <FileViewer 
+                fileType={type}
+                filePath={file}
+            />
+        </div>
+    )
+}
