@@ -10,6 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 
 
@@ -150,8 +151,9 @@ function Publication({ publication }) {
 	}
 
 	const setAdminAccess = (event) => {
-		console.log('clicked', event.target.checked)
-		adminAccess = event.target.checked;
+		// event.preventDefault();
+		// console.log('clicked', event.target.checked)
+		adminAccess = !adminAccess;
 	}
 
 	return (
@@ -167,12 +169,14 @@ function Publication({ publication }) {
 						</Typography>
 						<div>
 							<InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+							<FormGroup>
 							<FormControlLabel
 								control={
-									<Switch checked={adminAccess} onChange={setAdminAccess} name="admin" />
+									<Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
 								}
 								label="Admin"
 								/>
+							</FormGroup>
 							<Dialog
 								open={isCommentOpen}
 								onClose={closeCommentBox}
