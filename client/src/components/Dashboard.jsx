@@ -174,7 +174,7 @@ function Publication({ publication }) {
 								control={
 									<Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
 								}
-								label="Admin"
+								label="Private"
 								/>
 							</FormGroup>
 							<Dialog
