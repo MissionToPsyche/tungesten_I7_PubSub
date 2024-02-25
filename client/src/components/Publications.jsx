@@ -71,27 +71,29 @@ function Publication({ publication }) {
                         <Typography variant="h5" component="div">
                             {title}
                         </Typography>
-                        <PreviewFile />
-                        <Typography variant="body2">
+                        <PreviewFile file={[
+                            { type: 'pdf', path: file1 },
+                            { type: 'pdf', path: file2 },]} />
+                        < Typography variant="body2" >
                             {content}
-                        </Typography>
+                        </>
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </div >
     )
 }
 
-function PreviewFile() {
-    const file = file1;
-    const type = "pdf";
-
+function PreviewFile({ files }) {
     return (
         <div>
-            <FileViewer 
-                fileType={type}
-                filePath={file}
-            />
+            {files.map((file, index) => (
+                <FileViewer
+                    key={index}
+                    fileType={file.type}
+                    filePath={file.path}
+                />
+            ))}
         </div>
-    )
+    );
 }
