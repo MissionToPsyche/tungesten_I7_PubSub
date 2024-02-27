@@ -308,3 +308,451 @@ cairo_surface_t *diff_images(int page, cairo_surface_t *s1, cairo_surface_t *s2,
         return NULL;
     }
 }
+
+// Compares given two pages. If cr_out is not NULL, then the diff image (either
+// differences or unmodified page, if there are no diffs) is drawn to it.
+// If thumbnail and thumbnail_width are specified, then a thumbnail with
+// highlighted differences is created too.
+bool page_compare(int page, cairo_t *cr_out,
+                  PopplerPage *page1, PopplerPage *page2,
+                  wxImage *thumbnail = NULL, int thumbnail_width = -1)
+{
+    cairo_surface_t *img1 = page1 ? render_page(page1) : NULL;
+    cairo_surface_t *img2 = page2 ? render_page(page2) : NULL;
+
+    cairo_surface_t *diff = diff_images(page, img1, img2, 0, 0,
+                                        thumbnail, thumbnail_width);
+    const bool has_diff = (diff != NULL);
+
+    if (cr_out)
+    {
+        if (diff)
+        {
+            // render the difference as high-resolution bitmap
+
+            cairo_save(cr_out);
+            cairo_scale(cr_out, 72.0 / g_resolution, 72.0 / g_resolution);
+
+            cairo_set_source_surface(cr_out, diff ? diff : img1, 0, 0);
+            cairo_paint(cr_out);
+
+            cairo_restore(cr_out);
+        }
+        else
+        {
+            // save space (as well as improve rendering quality) in diff pdf
+            // by writing unchanged pages in their original form rather than
+            // a rasterized one
+
+            if (!g_skip_identical)
+                poppler_page_render(page1, cr_out);
+        }
+
+        if (diff || !g_skip_identical)
+            cairo_show_page(cr_out);
+    }
+
+    if (diff)
+        cairo_surface_destroy(diff);
+
+    if (img1)
+        cairo_surface_destroy(img1);
+    if (img2)
+        cairo_surface_destroy(img2);
+
+    return !has_diff;
+}
+
+// Compares two documents, writing diff PDF into file named 'pdf_output' if
+// not NULL. if 'differences' is not NULL, puts a map of which pages differ
+// into it. If 'progress' is provided, it is updated to reflect comparison's
+// progress. If 'gutter' is set, then all the pages are added to it, with
+// their respective thumbnails (the gutter must be empty beforehand).
+bool doc_compare(PopplerDocument *doc1, PopplerDocument *doc2,
+                 const char *pdf_output,
+                 std::vector<bool> *differences,
+                 wxProgressDialog *progress = NULL,
+                 Gutter *gutter = NULL)
+{
+    int pages_differ = 0;
+
+    cairo_surface_t *surface_out = NULL;
+    cairo_t *cr_out = NULL;
+
+    if (pdf_output)
+    {
+        double w, h;
+        poppler_page_get_size(poppler_document_get_page(doc1, 0), &w, &h);
+        surface_out = cairo_pdf_surface_create(pdf_output, w, h);
+        cr_out = cairo_create(surface_out);
+    }
+
+    int pages1 = poppler_document_get_n_pages(doc1);
+    int pages2 = poppler_document_get_n_pages(doc2);
+    int pages_total = pages1 > pages2 ? pages1 : pages2;
+
+    if (pages1 != pages2)
+    {
+        if (g_verbose)
+            printf("pages count differs: %d vs %d\n", pages1, pages2);
+    }
+
+    for (int page = 0; page < pages_total; page++)
+    {
+        if (progress)
+        {
+            progress->Update(
+                page,
+                wxString::Format(
+                    "Comparing page %d of %d...",
+                    page + 1,
+                    pages_total));
+        }
+
+        if (pdf_output && page != 0)
+        {
+            double w, h;
+            poppler_page_get_size(poppler_document_get_page(doc1, page), &w, &h);
+            cairo_pdf_surface_set_size(surface_out, w, h);
+        }
+
+        PopplerPage *page1 = page < pages1
+                                 ? poppler_document_get_page(doc1, page)
+                                 : NULL;
+        PopplerPage *page2 = page < pages2
+                                 ? poppler_document_get_page(doc2, page)
+                                 : NULL;
+
+        bool page_same;
+
+        if (gutter)
+        {
+            wxImage thumbnail;
+            page_same = page_compare(page, cr_out, page1, page2,
+                                     &thumbnail, Gutter::WIDTH);
+
+            wxString label1("(null)");
+            wxString label2("(null)");
+
+            if (page1)
+            {
+                gchar *label;
+                g_object_get(page1, "label", &label, NULL);
+                label1 = wxString::FromUTF8(label);
+                g_free(label);
+            }
+            if (page2)
+            {
+                gchar *label;
+                g_object_get(page2, "label", &label, NULL);
+                label2 = wxString::FromUTF8(label);
+                g_free(label);
+            }
+
+            wxString label;
+            if (label1 == label2)
+                label = label1;
+            else
+                label = label1 + " / " + label2;
+
+            gutter->AddPage(label, thumbnail);
+        }
+        else
+        {
+            page_same = page_compare(page, cr_out, page1, page2);
+        }
+
+        if (differences)
+            differences->push_back(!page_same);
+
+        if (!page_same)
+        {
+            pages_differ++;
+
+            if (g_verbose)
+                printf("page %d differs\n", page);
+
+            // If we don't need to output all different pages in any
+            // form (including verbose report of differing pages!), then
+            // we can stop comparing the PDFs as soon as we find the first
+            // difference.
+            if (!g_verbose && !pdf_output && !differences && !gutter)
+                break;
+        }
+    }
+
+    if (pdf_output)
+    {
+        cairo_destroy(cr_out);
+        cairo_surface_destroy(surface_out);
+    }
+
+    if (g_verbose)
+        printf("%d of %d pages differ.\n", pages_differ, pages_total);
+
+    // are doc1 and doc1 the same?
+    return (pages_differ == 0) && (pages1 == pages2);
+}
+
+// ------------------------------------------------------------------------
+// wxWidgets GUI
+// ------------------------------------------------------------------------
+
+const int ID_PREV_PAGE = wxNewId();
+const int ID_NEXT_PAGE = wxNewId();
+const int ID_ZOOM_IN = wxNewId();
+const int ID_ZOOM_OUT = wxNewId();
+const int ID_OFFSET_LEFT = wxNewId();
+const int ID_OFFSET_RIGHT = wxNewId();
+const int ID_OFFSET_UP = wxNewId();
+const int ID_OFFSET_DOWN = wxNewId();
+const int ID_GUTTER = wxNewId();
+
+#define BMP_ARTPROV(id) wxArtProvider::GetBitmap(id, wxART_TOOLBAR)
+
+#define BMP_PREV_PAGE BMP_ARTPROV(wxART_GO_BACK)
+#define BMP_NEXT_PAGE BMP_ARTPROV(wxART_GO_FORWARD)
+
+#define BMP_OFFSET_LEFT BMP_ARTPROV(wxART_GO_BACK)
+#define BMP_OFFSET_RIGHT BMP_ARTPROV(wxART_GO_FORWARD)
+#define BMP_OFFSET_UP BMP_ARTPROV(wxART_GO_UP)
+#define BMP_OFFSET_DOWN BMP_ARTPROV(wxART_GO_DOWN)
+
+#ifdef __WXGTK__
+#define BMP_ZOOM_IN BMP_ARTPROV("gtk-zoom-in")
+#define BMP_ZOOM_OUT BMP_ARTPROV("gtk-zoom-out")
+#else
+#include "gtk-zoom-in.xpm"
+#include "gtk-zoom-out.xpm"
+#define BMP_ZOOM_IN wxBitmap(gtk_zoom_in_xpm)
+#define BMP_ZOOM_OUT wxBitmap(gtk_zoom_out_xpm)
+#endif
+
+static const float ZOOM_FACTOR_STEP = 1.2f;
+
+BEGIN_EVENT_TABLE(DiffFrame, wxFrame)
+EVT_LISTBOX(ID_GUTTER, DiffFrame::OnSetPage)
+EVT_TOOL(ID_PREV_PAGE, DiffFrame::OnPrevPage)
+EVT_TOOL(ID_NEXT_PAGE, DiffFrame::OnNextPage)
+EVT_UPDATE_UI(ID_PREV_PAGE, DiffFrame::OnUpdatePrevPage)
+EVT_UPDATE_UI(ID_NEXT_PAGE, DiffFrame::OnUpdateNextPage)
+EVT_TOOL(ID_ZOOM_IN, DiffFrame::OnZoomIn)
+EVT_TOOL(ID_ZOOM_OUT, DiffFrame::OnZoomOut)
+EVT_TOOL(ID_OFFSET_LEFT, DiffFrame::OnOffsetLeft)
+EVT_TOOL(ID_OFFSET_RIGHT, DiffFrame::OnOffsetRight)
+EVT_TOOL(ID_OFFSET_UP, DiffFrame::OnOffsetUp)
+EVT_TOOL(ID_OFFSET_DOWN, DiffFrame::OnOffsetDown)
+END_EVENT_TABLE()
+
+class DiffPdfApp : public wxApp
+{
+public:
+    DiffPdfApp() : m_tlw(NULL) {}
+
+    virtual bool OnInit()
+    {
+        m_tlw = new DiffFrame(m_title);
+
+        // like in LMI, maximize the window
+        m_tlw->Maximize();
+        m_tlw->Show();
+
+        // yield so that size changes above take effect immediately (and so we
+        // can query the window for its size)
+        Yield();
+
+        return true;
+    }
+
+    void SetData(const wxString &file1, PopplerDocument *doc1,
+                 const wxString &file2, PopplerDocument *doc2)
+    {
+        m_title = wxString::Format("Differences between %s and %s", file1.c_str(), file2.c_str());
+        m_doc1 = doc1;
+        m_doc2 = doc2;
+    }
+
+protected:
+    virtual void OnEventLoopEnter(wxEventLoopBase *loop)
+    {
+        wxApp::OnEventLoopEnter(loop);
+
+        if (loop->IsMain())
+            SetFrameDocs();
+    }
+
+    void SetFrameDocs()
+    {
+        wxASSERT(m_tlw);
+        wxASSERT(m_doc1);
+        wxASSERT(m_doc2);
+
+        m_tlw->SetDocs(m_doc1, m_doc2);
+    }
+
+private:
+    DiffFrame *m_tlw;
+    wxString m_title;
+    PopplerDocument *m_doc1, *m_doc2;
+};
+
+IMPLEMENT_APP_NO_MAIN(DiffPdfApp);
+
+// ------------------------------------------------------------------------
+// main()
+// ------------------------------------------------------------------------
+
+int main(int argc, char *argv[])
+{
+    wxAppConsole::CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "diff-pdf");
+    wxInitializer wxinitializer(argc, argv);
+
+    static const wxCmdLineEntryDesc cmd_line_desc[] =
+        {
+            {wxCMD_LINE_SWITCH,
+             "h", "help", "show this help message",
+             wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
+
+            {wxCMD_LINE_SWITCH,
+             "v", "verbose", "be verbose"},
+
+            {wxCMD_LINE_SWITCH,
+             "s", "skip-identical", "only output pages with differences"},
+
+            {wxCMD_LINE_SWITCH,
+             "m", "mark-differences", "additionally mark differences on left side"},
+
+            {wxCMD_LINE_SWITCH,
+             "g", "grayscale", "only differences will be in color, unchanged parts will show as gray"},
+
+            {wxCMD_LINE_OPTION,
+             NULL, "output-diff", "output differences to given PDF file",
+             wxCMD_LINE_VAL_STRING},
+
+            {wxCMD_LINE_OPTION,
+             NULL, "channel-tolerance", "consider channel values to be equal if within specified tolerance",
+             wxCMD_LINE_VAL_NUMBER},
+
+            {wxCMD_LINE_OPTION,
+             NULL, "per-page-pixel-tolerance", "total number of pixels allowed to be different per page before specifying the page is different",
+             wxCMD_LINE_VAL_NUMBER},
+
+            {wxCMD_LINE_OPTION,
+             NULL, "dpi", "rasterization resolution (default: " wxSTRINGIZE(DEFAULT_RESOLUTION) " dpi)",
+             wxCMD_LINE_VAL_NUMBER},
+
+            {wxCMD_LINE_SWITCH,
+             NULL, "view", "view the differences in a window"},
+
+            {wxCMD_LINE_PARAM,
+             NULL, NULL, "file1.pdf", wxCMD_LINE_VAL_STRING},
+            {wxCMD_LINE_PARAM,
+             NULL, NULL, "file2.pdf", wxCMD_LINE_VAL_STRING},
+
+            {wxCMD_LINE_NONE}};
+
+    wxCmdLineParser parser(cmd_line_desc, argc, argv);
+
+    switch (parser.Parse())
+    {
+    case -1: // --help
+        return 0;
+
+    case 0: // everything is ok; proceed
+        break;
+
+    default: // syntax error
+        return 2;
+    }
+
+    if (parser.Found("verbose"))
+        g_verbose = true;
+
+    if (parser.Found("skip-identical"))
+        g_skip_identical = true;
+
+    if (parser.Found("mark-differences"))
+        g_mark_differences = true;
+
+    if (parser.Found("grayscale"))
+        g_grayscale = true;
+
+    wxFileName file1(parser.GetParam(0));
+    wxFileName file2(parser.GetParam(1));
+    file1.MakeAbsolute();
+    file2.MakeAbsolute();
+    const wxString url1 = wxFileSystem::FileNameToURL(file1);
+    const wxString url2 = wxFileSystem::FileNameToURL(file2);
+
+    GError *err = NULL;
+
+    PopplerDocument *doc1 = poppler_document_new_from_file(url1.utf8_str(), NULL, &err);
+    if (!doc1)
+    {
+        fprintf(stderr, "Error opening %s: %s\n", (const char *)parser.GetParam(0).c_str(), err->message);
+        g_error_free(err);
+        return 3;
+    }
+
+    PopplerDocument *doc2 = poppler_document_new_from_file(url2.utf8_str(), NULL, &err);
+    if (!doc2)
+    {
+        fprintf(stderr, "Error opening %s: %s\n", (const char *)parser.GetParam(1).c_str(), err->message);
+        g_error_free(err);
+        return 3;
+    }
+
+    if (parser.Found("per-page-pixel-tolerance", &g_per_page_pixel_tolerance))
+    {
+        if (g_per_page_pixel_tolerance < 0)
+        {
+            fprintf(stderr, "Invalid per-page-pixel-tolerance: %ld. Must be 0 or more\n", g_per_page_pixel_tolerance);
+            return 2;
+        }
+    }
+
+    if (parser.Found("channel-tolerance", &g_channel_tolerance))
+    {
+        if (g_channel_tolerance < 0 || g_channel_tolerance > 255)
+        {
+            fprintf(stderr, "Invalid channel-tolerance: %ld. Valid range is 0(default, exact matching)-255\n", g_channel_tolerance);
+            return 2;
+        }
+    }
+
+    if (parser.Found("dpi", &g_resolution))
+    {
+        if (g_resolution < 1 || g_resolution > 2400)
+        {
+            fprintf(stderr, "Invalid dpi: %ld. Valid range is 1-2400 (default: %d)\n", g_resolution, DEFAULT_RESOLUTION);
+            return 2;
+        }
+    }
+
+    int retval = 0;
+
+    wxString pdf_file;
+    if (parser.Found("output-diff", &pdf_file))
+    {
+        retval = doc_compare(doc1, doc2, pdf_file.utf8_str(), NULL) ? 0 : 1;
+    }
+    else if (parser.Found("view"))
+    {
+        wxGetApp().SetData(parser.GetParam(0), doc1,
+                           parser.GetParam(1), doc2);
+        retval = wxEntry(argc, argv);
+    }
+    else
+    {
+        retval = doc_compare(doc1, doc2, NULL, NULL) ? 0 : 1;
+    }
+
+    g_object_unref(doc1);
+    g_object_unref(doc2);
+
+    // MinGW doesn't reliably flush streams on exit, so flush them explicitly:
+    fflush(stdout);
+    fflush(stderr);
+
+    return retval;
+}
