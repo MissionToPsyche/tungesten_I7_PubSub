@@ -3,9 +3,9 @@ import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination 
 import axios from "axios";
 import FileViewer from "react-file-viewer";
 import file1 from "../assets/files/1.pdf"
-import file2 from "../assets/files/Publication-2.docx"
+import { Publication2 } from "../assets/files/Publication2.docx"
 import file3 from "../assets/files/Publication-3.xlsx"
-import file4 from "../assets/files/Publication-4.pptx"
+import file4 from "../assets/files/Publication4.pptx"
 
 
 export default function Publications() {
@@ -76,7 +76,7 @@ function Publication({ publication }) {
                         </Typography>
                         <PreviewFile files={[
                             { type: 'pdf', path: file1 },
-                            { type: 'docx', path: file2 },
+                            { type: 'docx', path: Publication2 },
                             { type: 'xlsx', path: file3 },
                             { type: 'pptx', path: file4 },]} />
                         <Typography Typography variant="body2" >
