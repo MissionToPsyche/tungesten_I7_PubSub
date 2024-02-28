@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
 import FileViewer from "react-file-viewer";
-import file1 from "../assets/files/1.pdf"
-import { Publication2 } from "../assets/files/Publication2.docx"
-import file3 from "../assets/files/Publication-3.xlsx"
-import file4 from "../assets/files/Publication4.pptx"
+import Publication1 from "../assets/files/Publication1.pdf"
+import Publication2 from "../assets/files/Publication2.docx"
+import Publication3 from "../assets/files/Publication3.xlsx"
+import Publication4 from "../assets/files/Publication4.pptx"
+
+
+const files = {
+    "Publication1": Publication1,
+    // "Publication2": Publication2,
+};
 
 
 export default function Publications() {
@@ -74,11 +80,7 @@ function Publication({ publication }) {
                         <Typography variant="h5" component="div">
                             {title}
                         </Typography>
-                        <PreviewFile files={[
-                            { type: 'pdf', path: file1 },
-                            { type: 'docx', path: Publication2 },
-                            { type: 'xlsx', path: file3 },
-                            { type: 'pptx', path: file4 },]} />
+                        <PreviewFile title={title} />
                         <Typography Typography variant="body2" >
                             {content}
                         </Typography>
@@ -89,16 +91,19 @@ function Publication({ publication }) {
     )
 }
 
-function PreviewFile({ files }) {
+
+
+function PreviewFile({ title }) {
+    // TODO: Add logic to preview different file types from backend
+
     return (
         <div>
-            {files.map((file, index) => (
-                <FileViewer
-                    key={index}
-                    fileType={file.type}
-                    filePath={file.path}
-                />
-            ))}
+            <iframe
+                src={Publication1}
+                width="100%"
+                height="200px"
+            >
+            </iframe>
         </div>
-    );
+    )
 }
