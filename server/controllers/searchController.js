@@ -9,9 +9,9 @@ const searchDocsByTitle = async (req, res) => {
             return { document, relevanceScore };
         });
         const sortedDocuments = documentsWithRelevance.sort((a, b) => b.relevanceScore - a.relevanceScore).map(entry => entry.document);
-        res.json(sortedDocuments);
+        res.status(200).json(sortedDocuments);
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -31,7 +31,7 @@ const searchDocsByFilters = async (req, res) => {
   
       res.json(filteredDocuments);
     } catch (error) {
-      console.error(error);
+      console.log(error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
