@@ -3,14 +3,16 @@ import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination 
 import axios from "axios";
 import FileViewer from "react-file-viewer";
 import Publication1 from "../assets/files/Publication1.pdf"
-import Publication2 from "../assets/files/Publication2.docx"
-import Publication3 from "../assets/files/Publication3.xlsx"
-import Publication4 from "../assets/files/Publication4.pptx"
+import Publication2 from "../assets/files/Publication2.pdf"
+import Publication3 from "../assets/files/Publication3.pdf"
+import Publication4 from "../assets/files/Publication4.pdf"
 
 
 const files = {
     "Publication1": Publication1,
-    // "Publication2": Publication2,
+    "Publication2": Publication2,
+    "Publication3": Publication3,
+    "Publication4": Publication4
 };
 
 
@@ -96,12 +98,15 @@ function Publication({ publication }) {
 function PreviewFile({ title }) {
     // TODO: Add logic to preview different file types from backend
 
+    const file = files[title];
+
     return (
         <div>
             <iframe
-                src={Publication1}
+                src={file}
                 width="100%"
-                height="200px"
+                height="100%"
+                frameBorder="0"
             >
             </iframe>
         </div>
