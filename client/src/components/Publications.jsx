@@ -98,15 +98,19 @@ function Publication({ publication }) {
 function PreviewFile({ title }) {
     // TODO: Add logic to preview different file types from backend
 
+    const [isLoading, setIsLoading] = useState(true);
     const file = files[title];
 
     return (
-        <div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            {isLoading && <CircularProgress />}
             <iframe
                 src={file}
                 width="100%"
                 height="100%"
                 frameBorder="0"
+                onLoad={() => setIsLoading(false)}
+                style={{ display: isLoading ? 'none' : 'block' }}
             >
             </iframe>
         </div>
