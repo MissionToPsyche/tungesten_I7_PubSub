@@ -7,6 +7,8 @@ import AddUser from './components/AddUser';
 import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
+import Publication from './components/Publication';
+import ViewPDF from './components/viewPDF';
 import UpdateUser from './components/UpdateUser';
 import AuthProvider from './providers/AuthProvider';
 import RoutesComp from './routes/RoutesComp';
@@ -14,24 +16,25 @@ import RoutesComp from './routes/RoutesComp';
 function App() {
 
   return (
-	<AuthProvider>
-		{/* <MuiNavbar /> */}
-      <RoutesComp />
-    </AuthProvider>
-    // <div>
-    //   <Router>
-    //     <MuiNavbar />
-    //     <Routes>
-    //       <Route path="/" element={<Mainpage />} />
-    //       <Route path="/login" element={<Login />} />
-    //       <Route path="/adduser/" element={<AddUser />} />
-    //       <Route path="/updateUser/" element={<UpdateUser />} />
-    //       <Route path="/dashboard/" element={<Dashboard />} />
-    //       <Route path="/publications/" element={<Publications />} />
-    //       <Route path="/uploaddoc/" element={<UploadDoc />} />
-    //     </Routes>
-    //   </Router>
-    // </div>
+    <div>
+      <Router>
+        <MuiNavbar />
+        <Routes>
+          <Route path="/" element={<Mainpage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/adduser/" element={<AddUser />} />
+          <Route path="/dashboard/" element={<Dashboard />} />
+          <Route path="/publications/" element={<Publications />} />
+          <Route path="/publication/:pubId" element={<Publication />} />
+          <Route path="/uploaddoc/" element={<UploadDoc />} />
+          <Route path="/ViewPDF/" element={<ViewPDF />} />
+        </Routes>
+      </Router>
+    </div>
+    // <AuthProvider>
+    // 	{/* <MuiNavbar /> */}
+    //     <RoutesComp />
+    //   </AuthProvider>
 
   )
 }
