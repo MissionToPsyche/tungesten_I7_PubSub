@@ -1,6 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-export const Mainpage = () => {
+
+export function Mainpage() {
 
 
     return (
