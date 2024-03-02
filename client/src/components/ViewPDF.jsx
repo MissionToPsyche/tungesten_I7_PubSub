@@ -6,7 +6,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-function ViewPDF() {
+function ViewPDF() {//view pdf controller to show the contents
 
     const [pdfFile, setPDFFile] = useState(null)
     const [viewPdf, setViewPdf] = useState(null)
@@ -43,7 +43,7 @@ function ViewPDF() {
     }
     const newplugin = [defaultLayoutPlugin()];
 
-    return (
+    return ( //form to submit pdf to view and its container to show the pdf
         <div className="container">
             <form onSubmit={handleSubmit}>
                 <input type='file' className="form-control" onChange={handleChange} />

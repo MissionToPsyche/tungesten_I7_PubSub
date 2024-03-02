@@ -23,12 +23,12 @@ function Dashboard() {
         });*/
         const newarr = [
             {
-                title: "one",
-                content: "conetent 1"
+                title: "NASA Mission to Mars",
+                content: "Content Of Publication 1"
             },
             {
-                title: "two",
-                content: "content 2"
+                title: "NASA Rocket Mission",
+                content: "Content of Publication 2"
             }
         ]
 
