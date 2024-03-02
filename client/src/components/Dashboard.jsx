@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Typography, Tabs, Tab, Box, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 function Dashboard() {
@@ -8,9 +8,6 @@ function Dashboard() {
         setValue(newValue);
     };
 
-    useEffect(() => {
-        console.log(publications);
-    })
 
     return (
         <div>
