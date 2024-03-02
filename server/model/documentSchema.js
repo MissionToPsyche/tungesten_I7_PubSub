@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const documentSchema = new mongoose.Schema({
     title: { type: String, required: true, unique: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    author: { type: String, ref: 'User', required: true },
     abstract: { type: String },
     keywords: [{ type: String }],
     publicationDate: { type: Date, default: Date.now },
