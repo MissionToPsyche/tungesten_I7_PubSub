@@ -5,6 +5,17 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useNavigate } from 'react-router-dom';
+import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Switch from '@mui/material/Switch';
 
 
 function Dashboard() {
@@ -16,33 +27,82 @@ function Dashboard() {
 
     const init = async () => {
         setIsLoading(true);
-        /*const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+        const res = await axios.get("http://localhost:3000/docs/fetchAll", {
             headers: {
                 "Content-Type": "application/json"
             }
-        });*/
-        const newarr = [
-            {
-                title: "NASA Mission to Mars",
-                content: "Content Of Publication 1"
-            },
-            {
-                title: "NASA Rocket Mission",
-                content: "Content of Publication 2"
-            }
-        ]
-
-        setPublications(newarr);
+        });
+        setPublications(res.data.documents);
         setIsLoading(false);
     }
 
+    const newInitMethod = () => {
+        setIsLoading(true);
+        let arr = [{
+            title: "Document 1",
+            content: "New Content for testing the functionality.",
+            comments: ['comment 1 for doc 1', 'comment 2 for doc 1'],
+            adminAccess: true
+        },
+        {
+            title: "Document 2",
+            content: "New Content for testing the functionality.",
+            comments: ['comment 1 for doc 2', 'comment 2 for doc 2'],
+            adminAccess: true
+        },
+        {
+            title: "Document 3",
+            content: "New Content for testing the functionality.",
+            adminAccess: false
+        },
+        {
+            title: "Document 4",
+            content: "New Content for testing the functionality.",
+            adminAccess: false
+        },
+        {
+            title: "Document 5",
+            content: "New Content for testing the functionality.",
+            adminAccess: true
+        },
+        {
+            title: "Document 6",
+            content: "New Content for testing the functionality.",
+            adminAccess: false
+        },
+        {
+            title: "Document 7",
+            content: "New Content for testing the functionality.",
+            adminAccess: true
+        },
+        {
+            title: "Document 8",
+            content: "New Content for testing the functionality.",
+            adminAccess: true
+        },
+        {
+            title: "Document 9",
+            content: "New Content for testing the functionality."
+        }
+        ];
+        setPublications(arr);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }
+
     useEffect(() => {
-        init();
+        // init();
+        newInitMethod();
     }, []);
 
     const handleChange = (event, value) => {
         setPage(value);
     };
+
+    useEffect(() => {
+        console.log(publications);
+    })
 
     return (
         <div>
@@ -65,7 +125,7 @@ function Dashboard() {
                                     )
                                 ))}
                             </Grid>
-                            <Pagination count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
+                            <Pagination sx={{ marginTop: 2 }} count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
                         </>
                     )}
                 </Box>
@@ -75,9 +135,31 @@ function Dashboard() {
 }
 
 function Publication({ publication }) {
-    const { title, content } = publication;
-    const [shown, setShown] = useState(false);
+    var { title, content, comments, adminAccess } = publication;
     const navigate = useNavigate();
+    var [isCommentOpen, setIsCommentOpen] = useState(false);
+    const openCommentBox = () => setIsCommentOpen(true);
+    const closeCommentBox = (event, action) => {
+        if (action === 'submit') {
+            event.preventDefault();
+            let formData = new FormData(event.currentTarget);
+            let formJson = Object.fromEntries(formData.entries());
+            let newComment = formJson.newComment;
+            console.log(newComment);
+            if (newComment) {
+                comments.push(newComment);
+                // api call for sending the comment to backend.
+            }
+        }
+        setIsCommentOpen(false);
+    }
+
+    const setAdminAccess = (event) => {
+        // event.preventDefault();
+        // console.log('clicked', event.target.checked)
+        adminAccess = !adminAccess;
+    }
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
@@ -89,7 +171,55 @@ function Publication({ publication }) {
                         <Typography variant="body2">
                             {content}
                         </Typography>
-                        <div><RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon></div>
+                        <div>
+                            <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
+                            <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={
+                                        <Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
+                                    }
+                                    label="Private"
+                                />
+                            </FormGroup>
+                            <Dialog
+                                open={isCommentOpen}
+                                onClose={closeCommentBox}
+                                PaperProps={{
+                                    comments: comments,
+                                    component: 'form',
+                                    onSubmit: (event) => closeCommentBox(event, 'submit')
+                                }}
+                            >
+                                <DialogTitle>Comments</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                            Comments for document : {title}
+                                        </Typography>
+                                        {comments && comments.map((comment) => comment && (
+                                            <Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
+                                                {comment}
+                                            </Typography>
+                                        ))}
+
+                                    </DialogContentText>
+                                    <TextField
+                                        margin="dense"
+                                        id="newComment"
+                                        name="newComment"
+                                        label="Comment"
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={closeCommentBox}>Close</Button>
+                                    <Button type="submit">Submit</Button>
+                                </DialogActions>
+                            </Dialog>
+
+                        </div>
                     </CardContent>
                 </Card>
             </div>

@@ -8,9 +8,9 @@ import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
 import ViewPDF from './components/viewPDF';
-
-
-
+import UpdateUser from './components/UpdateUser';
+import AuthProvider from './providers/AuthProvider';
+import RoutesComp from './routes/RoutesComp';
 
 function App() {
 
@@ -29,6 +29,10 @@ function App() {
         </Routes>
       </Router>
     </div>
+    // <AuthProvider>
+    // 	{/* <MuiNavbar /> */}
+    //     <RoutesComp />
+    //   </AuthProvider>
 
   )
 }

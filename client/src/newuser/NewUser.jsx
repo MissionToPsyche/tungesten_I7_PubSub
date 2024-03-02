@@ -1,5 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
 import TextField from '@mui/material/TextField';
 
 export const NewUser = () => {

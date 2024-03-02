@@ -21,7 +21,7 @@ const userLogin = async (req, res) => {
 
 const addUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, full_name, date_of_birth, email } = req.body;
         // Checking if user already exists
         const userExists = await User.findOne({ username });
         if (userExists) {
@@ -40,9 +40,12 @@ const addUser = async (req, res) => {
         if (!/\d/.test(password)) {
             return res.status(400).send('Password must contain at least one digit.');
         }
-        const newUser = new User({
+        const newUser = new User({ //newuser adding in the schema
             username,
-            password
+            password,
+            full_name,
+            date_of_birth,
+            email
         });
         await newUser.save();
         res.status(201).send('User registered successfully');
@@ -50,6 +53,7 @@ const addUser = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
 
 // Checking for special characters
 const specialCharacters = '!@#$%^&*(),.?":{}|<>';
