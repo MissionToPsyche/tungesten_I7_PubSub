@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from "../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 
 function Login() {
@@ -21,10 +23,11 @@ function Login() {
 
 	const login = () => {
 		// console.log(userName);
-		setUserNameErrorFlag(true);
-		setPasswordErrorFlag(true);
-		setUserNameErrorMessage("Username doesn't exist.");
-		setPasswordErrorMessage("Password is wrong");
+		// setUserNameErrorFlag(true);
+		// setPasswordErrorFlag(true);
+		// setUserNameErrorMessage("Username doesn't exist.");
+		// setPasswordErrorMessage("Password is wrong");
+		handleLogin();
 	};
 
 	const userNameChanged = (event) => {
@@ -38,6 +41,18 @@ function Login() {
 		setPasswordErrorFlag(false);
 		setPasswordErrorMessage("");
 	}
+
+	const { setToken } = useAuth();
+	const navigate = useNavigate();
+
+	const handleLogin = () => {
+		setToken("this is a test token");
+		navigate("/", { replace: true });
+	};
+
+	// setTimeout(() => {
+	// 	handleLogin();
+	// }, 3 * 1000);
 
 	return (
 		<ThemeProvider theme={defaultTheme}>

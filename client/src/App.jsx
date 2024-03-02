@@ -8,6 +8,10 @@ import Dashboard from './components/Dashboard';
 import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
 import Publication from './components/Publication';
+import ViewPDF from './components/viewPDF';
+import UpdateUser from './components/UpdateUser';
+import AuthProvider from './providers/AuthProvider';
+import RoutesComp from './routes/RoutesComp';
 
 function App() {
 
@@ -23,9 +27,14 @@ function App() {
           <Route path="/publications/" element={<Publications />} />
           <Route path="/publication/:pubId" element={<Publication />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />
+          <Route path="/ViewPDF/" element={<ViewPDF />} />
         </Routes>
       </Router>
     </div>
+    // <AuthProvider>
+    // 	{/* <MuiNavbar /> */}
+    //     <RoutesComp />
+    //   </AuthProvider>
 
   )
 }

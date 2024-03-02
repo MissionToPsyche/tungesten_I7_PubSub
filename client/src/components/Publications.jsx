@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
-import FileViewer from "react-file-viewer";
 import Publication1 from "../assets/files/Publication1.pdf"
 import Publication2 from "../assets/files/Publication2.pdf"
 import Publication3 from "../assets/files/Publication3.pdf"
 import Publication4 from "../assets/files/Publication4.pdf"
-
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useNavigate } from 'react-router-dom';
+import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Switch from '@mui/material/Switch';
 
 const files = {
     "Publication1": Publication1,
@@ -73,7 +84,31 @@ export default function Publications() {
 }
 
 function Publication({ publication }) {
-    const { title, content } = publication;
+    var { title, content, comments, adminAccess } = publication;
+    const navigate = useNavigate();
+    var [isCommentOpen, setIsCommentOpen] = useState(false);
+    const openCommentBox = () => setIsCommentOpen(true);
+    const closeCommentBox = (event, action) => {
+        if (action === 'submit') {
+            event.preventDefault();
+            let formData = new FormData(event.currentTarget);
+            let formJson = Object.fromEntries(formData.entries());
+            let newComment = formJson.newComment;
+            console.log(newComment);
+            if (newComment) {
+                comments.push(newComment);
+                // api call for sending the comment to backend.
+            }
+        }
+        setIsCommentOpen(false);
+    }
+
+    const setAdminAccess = (event) => {
+        // event.preventDefault();
+        // console.log('clicked', event.target.checked)
+        adminAccess = !adminAccess;
+    }
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
@@ -86,6 +121,55 @@ function Publication({ publication }) {
                         <Typography Typography variant="body2" >
                             {content}
                         </Typography>
+                        <div>
+                            <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
+                            <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={
+                                        <Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
+                                    }
+                                    label="Private"
+                                />
+                            </FormGroup>
+                            <Dialog
+                                open={isCommentOpen}
+                                onClose={closeCommentBox}
+                                PaperProps={{
+                                    comments: comments,
+                                    component: 'form',
+                                    onSubmit: (event) => closeCommentBox(event, 'submit')
+                                }}
+                            >
+                                <DialogTitle>Comments</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                            Comments for document : {title}
+                                        </Typography>
+                                        {comments && comments.map((comment) => comment && (
+                                            <Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
+                                                {comment}
+                                            </Typography>
+                                        ))}
+
+                                    </DialogContentText>
+                                    <TextField
+                                        margin="dense"
+                                        id="newComment"
+                                        name="newComment"
+                                        label="Comment"
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={closeCommentBox}>Close</Button>
+                                    <Button type="submit">Submit</Button>
+                                </DialogActions>
+                            </Dialog>
+
+                        </div>
                     </CardContent>
                 </Card>
             </div>
