@@ -17,7 +17,18 @@ const documentSchema = new mongoose.Schema({
         permissions: [{ type: String, enum: ['read', 'edit', 'delete', 'share'] }]
     }],
     versions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DocumentVersion' }],
+    createdAt: { type: Date, default: Date.now },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+});
+
+const commentSchema = new mongoose.Schema({
+    text: { type: String, required: true },
+    document: { type: mongoose.Schema.Types.ObjectId, ref: 'Document', required: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Document', documentSchema);
+const Document = mongoose.model('Document', documentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = { Document, Comment }; 

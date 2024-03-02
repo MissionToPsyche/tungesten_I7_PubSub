@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const Document = require('../model/documentSchema'); // Adjust the path as necessary
+const { Document, Comment } = require('../model/documentSchema'); // Adjust the path as necessary
 const DocumentVersion = require('../model/documentVersionSchema'); // Adjust the path as necessary
 const User = require('../model/userModel'); // Updated path to match your structure
 
@@ -53,7 +53,7 @@ describe('Document and DocumentVersion Models', () => {
 
   // The rest of your tests follow...
 });
-const { uploadDocument, getAllDocuments, getDocumentsByUsername } = require('../controllers/documentController');
+const { uploadDocument, getAllDocuments, getDocumentsByUsername, postNewCommentOnTheDocument } = require('../controllers/documentController');
 const Document2 = require('../model/documentModel');
 const httpMocks = require('node-mocks-http');
 
