@@ -58,4 +58,19 @@ const postNewCommentOnTheDocument = async (req, res) => {
   }
 };
 
-module.exports = { uploadDocument, getAllDocuments, getDocumentsByUsername, postNewCommentOnTheDocument };
+const getCommentsForDocument = async (req, res) => {
+  try {
+    const { id } = req.params; // Document ID from URL
+    const comments = await Comment.find({ document: id }).populate('createdBy', 'username -_id');
+
+    if (!comments.length) {
+      return res.status(404).json({ message: 'No comments found for this document.' });
+    }
+
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching comments', error: error.message });
+  }
+};
+
+module.exports = { uploadDocument, getAllDocuments, getDocumentsByUsername, postNewCommentOnTheDocument, getCommentsForDocument };

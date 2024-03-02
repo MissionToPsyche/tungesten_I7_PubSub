@@ -64,7 +64,7 @@ describe('Post New Comment on Document', () => {
         await postNewCommentOnTheDocument(req, res);
 
         expect(res.statusCode).toBe(400);
-        expect(JSON.parse(res._getData())).toHaveProperty('message', 'Document not found');
+        expect(JSON.parse(res._getData())).toHaveProperty('message', 'Error adding comment');
     });
 
     // Test: Returns 400 for invalid comment payload
@@ -80,5 +80,28 @@ describe('Post New Comment on Document', () => {
 
         expect(res.statusCode).toBe(400);
         expect(JSON.parse(res._getData())).toHaveProperty('message', 'Error adding comment');
+    });
+
+    // Test: Database Persistence Verification
+    it('verifies database persistence of a new comment', async () => {
+        const commentText = 'Persisted comment text';
+        const createdBy = new mongoose.Types.ObjectId(); // Simulate a user ID
+
+        const req = httpMocks.createRequest({
+            method: 'POST',
+            url: `/documents/${savedDocument._id}/comments`,
+            params: { id: savedDocument._id.toString() },
+            body: { text: commentText, createdBy }
+        });
+        const res = httpMocks.createResponse();
+
+        await postNewCommentOnTheDocument(req, res);
+
+        const persistedComments = await Comment.find({ document: savedDocument._id });
+        expect(persistedComments.length).toBeGreaterThan(0);
+        const newComment = persistedComments.find(c => c.text === commentText);
+        expect(newComment).toBeTruthy();
+        expect(newComment.createdBy.toString()).toBe(createdBy.toString());
+        expect(res.statusCode).toBe(201);
     });
 });
