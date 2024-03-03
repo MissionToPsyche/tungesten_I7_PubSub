@@ -46,8 +46,67 @@ export default function Publications() {
     }
 
     useEffect(() => {
-        init();
+        // init();
+        demoInitMethod();
     }, []);
+
+    const demoInitMethod = () => {
+        setIsLoading(true);
+        let arr = [
+            {
+                title: 'document 1',
+                content: 'Content for demo doc 1',
+                comments: ['comment 1 for doc 1', 'comment 2 for doc 1'],
+                adminAccess: false
+            },
+            {
+                title: 'document 2',
+                content: 'Content for demo doc 2',
+                comments: ['comment 1 for doc 2', 'comment 2 for doc 2'],
+                adminAccess: false
+            },
+            {
+                title: 'document 3',
+                content: 'Content for demo doc 3',
+                comments: ['comment 1 for doc 3', 'comment 2 for doc 3'],
+                adminAccess: false
+            },
+            {
+                title: 'document 4',
+                content: 'Content for demo doc 4',
+                comments: ['comment 1 for doc 4', 'comment 2 for doc 4'],
+                adminAccess: false
+            },
+            {
+                title: 'document 5',
+                content: 'Content for demo doc 5',
+                comments: ['comment 1 for doc 5', 'comment 2 for doc 5'],
+                adminAccess: false
+            },
+            {
+                title: 'document 6',
+                content: 'Content for demo doc 6',
+                comments: ['comment 1 for doc 6', 'comment 2 for doc 6'],
+                adminAccess: false
+            },
+            {
+                title: 'document 7',
+                content: 'Content for demo doc 7',
+                comments: ['comment 1 for doc 7', 'comment 2 for doc 7'],
+                adminAccess: false
+            },
+            {
+                title: 'document 8',
+                content: 'Content for demo doc 8',
+                comments: ['comment 1 for doc 8', 'comment 2 for doc 8'],
+                adminAccess: false
+            }
+        ];
+        setPublications(arr);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
 
     const handleChange = (event, value) => {
         setPage(value);
