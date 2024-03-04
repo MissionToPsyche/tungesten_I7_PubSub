@@ -33,6 +33,8 @@ export default function Publications() {
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const itemsPerPage = 6;
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [searchResults, setSearchResults] = useState([]);
 
     const init = async () => {
         setIsLoading(true);
@@ -51,6 +53,20 @@ export default function Publications() {
     }
 
     useEffect(() => {
+        // const searchDocsByTitle = async () => {
+        //     if (searchTerm) {
+        //         try {
+        //             const res = await axios.get(`http://localhost:3000/search/bytitle?title=${searchTerm}`);
+        //             setSearchResults(res.data);
+        //         } catch (error) {
+        //             console.error('Error searching documents:', error);
+        //         }
+        //     } else {
+        //         setSearchResults([]);
+        //     }
+        // };
+
+        // searchDocsByTitle();
         init();
     }, []);
 
@@ -58,12 +74,28 @@ export default function Publications() {
         setPage(value);
     };
 
+    // const handleSearchChange = (event) => {
+    //     setSearchTerm(event.target.value);
+    // };
+
 
     return (
         <div>
             <Typography variant="h3" sx={{ margin: "30px" }}>Publications</Typography>
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
                 <Box maxWidth={800}>
+                    <TextField
+                        // value={searchTerm}
+                        // onChange={handleSearchChange}
+                        placeholder="Search by title"
+                        fullWidth
+                        variant="outlined"
+                        sx={{ marginBottom: "20px" }}
+                    />
+                    {/* Render searchResults instead of publications */}
+                    {/* {searchResults.map((publication) => (
+                        <Publication publication={publication} key={publication._id} />
+                    ))} */}
                     {isLoading ? (
                         <CircularProgress />
                     ) : publications.length === 0 ? (
