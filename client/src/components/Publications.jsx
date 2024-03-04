@@ -18,6 +18,12 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const files = {
     "Publication1": Publication1,
@@ -57,49 +63,57 @@ export default function Publications() {
                 title: 'document 1',
                 content: 'Content for demo doc 1',
                 comments: ['comment 1 for doc 1', 'comment 2 for doc 1'],
-                adminAccess: false
+                adminAccess: false,
+                documentAccess : ['Edit', 'Read', 'Share']
             },
             {
                 title: 'document 2',
                 content: 'Content for demo doc 2',
                 comments: ['comment 1 for doc 2', 'comment 2 for doc 2'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Share", "Read"]
             },
             {
                 title: 'document 3',
                 content: 'Content for demo doc 3',
                 comments: ['comment 1 for doc 3', 'comment 2 for doc 3'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Edit", "Read"]
             },
             {
                 title: 'document 4',
                 content: 'Content for demo doc 4',
                 comments: ['comment 1 for doc 4', 'comment 2 for doc 4'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Read"]
             },
             {
                 title: 'document 5',
                 content: 'Content for demo doc 5',
                 comments: ['comment 1 for doc 5', 'comment 2 for doc 5'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Share"]
             },
             {
                 title: 'document 6',
                 content: 'Content for demo doc 6',
                 comments: ['comment 1 for doc 6', 'comment 2 for doc 6'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Share", "Edit"]
             },
             {
                 title: 'document 7',
                 content: 'Content for demo doc 7',
                 comments: ['comment 1 for doc 7', 'comment 2 for doc 7'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Edit"]
             },
             {
                 title: 'document 8',
                 content: 'Content for demo doc 8',
                 comments: ['comment 1 for doc 8', 'comment 2 for doc 8'],
-                adminAccess: false
+                adminAccess: false,
+				documentAccess: ["Share", "Read", "Edit"]
             }
         ];
         setPublications(arr);
@@ -143,7 +157,7 @@ export default function Publications() {
 }
 
 function Publication({ publication }) {
-    var { title, content, comments, adminAccess } = publication;
+    var { title, content, comments, adminAccess, documentAccess } = publication;
     const navigate = useNavigate();
     var [isCommentOpen, setIsCommentOpen] = useState(false);
     const openCommentBox = () => setIsCommentOpen(true);
@@ -168,6 +182,15 @@ function Publication({ publication }) {
         adminAccess = !adminAccess;
     }
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClickPermissionMenu = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClosePermissionMenu = () => {
+      setAnchorEl(null);
+    };
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
@@ -183,6 +206,26 @@ function Publication({ publication }) {
                         <div>
                             <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
                             <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+                            {documentAccess && documentAccess.length > 0 && (<MoreVertIcon onClick={handleClickPermissionMenu}></MoreVertIcon>) }
+                            <Menu
+                                id="demo-positioned-menu"
+                                aria-labelledby="demo-positioned-button"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClosePermissionMenu}
+                                anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                                }}
+                            >
+                                {documentAccess && documentAccess.includes("Edit") && (<MenuItem onClick={handleClosePermissionMenu}><EditIcon /> Edit</MenuItem>) }
+                                {documentAccess && documentAccess.includes("Read") && (<MenuItem onClick={handleClosePermissionMenu}><ChromeReaderModeIcon /> Read</MenuItem>) }
+                                {documentAccess && documentAccess.includes("Share") && (<MenuItem onClick={handleClosePermissionMenu}><IosShareIcon /> Share</MenuItem>) }
+                            </Menu>
                             <FormGroup>
                                 <FormControlLabel
                                     control={
