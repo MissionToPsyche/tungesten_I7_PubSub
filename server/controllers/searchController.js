@@ -1,4 +1,4 @@
-const Document = require("../model/documentSchema");
+const {Document, Comment} = require("../model/documentSchema");
 
 const searchDocsByTitle = async (req, res) => {
     try {
