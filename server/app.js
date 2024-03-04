@@ -25,7 +25,7 @@ mongoose
 
 // Authentication middleware
 app.use("/auth", authRouter);
-app.use("/docs", docRouter);
+app.use("/docs", docRouter); 
 app.use("/search", searchRouter);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

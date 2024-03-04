@@ -36,12 +36,17 @@ export default function Publications() {
 
     const init = async () => {
         setIsLoading(true);
-        const res = await axios.get("http://localhost:3000/docs/fetchAll", {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        setPublications(res.data.documents);
+        try {
+            const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log('Response:', res); // Log the entire response
+            setPublications(res.data);
+        } catch (error) {
+            console.error('Error fetching documents:', error); // Log any errors
+        }
         setIsLoading(false);
     }
 
