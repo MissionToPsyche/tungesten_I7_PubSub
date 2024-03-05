@@ -215,7 +215,7 @@ function Publication({ publication }) {
                                 onClose={handleClosePermissionMenu}
                                 anchorOrigin={{
                                 vertical: 'top',
-                                horizontal: 'left',
+                                horizontal: 'right',
                                 }}
                                 transformOrigin={{
                                 vertical: 'top',
