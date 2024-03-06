@@ -33,7 +33,7 @@ export default function Publications() {
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const itemsPerPage = 6;
-    // const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     // const [searchResults, setSearchResults] = useState([]);
 
     const init = async () => {
@@ -68,15 +68,15 @@ export default function Publications() {
 
         // searchDocsByTitle();
         init();
-    }, []);
+    }, [searchTerm]);
 
     const handleChange = (event, value) => {
         setPage(value);
     };
 
-    // const handleSearchChange = (event) => {
-    //     setSearchTerm(event.target.value);
-    // };
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
 
 
     return (
@@ -85,8 +85,8 @@ export default function Publications() {
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
                 <Box maxWidth={800}>
                     <TextField
-                        // value={searchTerm}
-                        // onChange={handleSearchChange}
+                        value={searchTerm}
+                        onChange={handleSearchChange}
                         placeholder="Search by title"
                         fullWidth
                         variant="outlined"
