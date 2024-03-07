@@ -34,7 +34,7 @@ export default function Publications() {
     const [page, setPage] = useState(1);
     const itemsPerPage = 6;
     const [searchTerm, setSearchTerm] = useState('');
-    // const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState([]);
 
     const init = async () => {
         setIsLoading(true);
@@ -53,20 +53,20 @@ export default function Publications() {
     }
 
     useEffect(() => {
-        // const searchDocsByTitle = async () => {
-        //     if (searchTerm) {
-        //         try {
-        //             const res = await axios.get(`http://localhost:3000/search/bytitle?title=${searchTerm}`);
-        //             setSearchResults(res.data);
-        //         } catch (error) {
-        //             console.error('Error searching documents:', error);
-        //         }
-        //     } else {
-        //         setSearchResults([]);
-        //     }
-        // };
+        const searchDocsByTitle = async () => {
+            if (searchTerm) {
+                try {
+                    const res = await axios.get(`http://localhost:3000/search/bytitle?title=${searchTerm}`);
+                    setSearchResults(res.data);
+                } catch (error) {
+                    console.error('Error searching documents:', error);
+                }
+            } else {
+                setSearchResults([]);
+            }
+        };
 
-        // searchDocsByTitle();
+        searchDocsByTitle();
         init();
     }, [searchTerm]);
 
@@ -92,10 +92,9 @@ export default function Publications() {
                         variant="outlined"
                         sx={{ marginBottom: "20px" }}
                     />
-                    {/* Render searchResults instead of publications */}
-                    {/* {searchResults.map((publication) => (
+                    {searchResults.map((publication) => (
                         <Publication publication={publication} key={publication._id} />
-                    ))} */}
+                    ))}
                     {isLoading ? (
                         <CircularProgress />
                     ) : publications.length === 0 ? (
