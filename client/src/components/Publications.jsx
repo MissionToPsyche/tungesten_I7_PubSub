@@ -20,7 +20,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 
 const files = {
-    "Publication1": Publication1,
+    "Exploring the depths": Publication1,
     "Publication2": Publication2,
     "Publication3": Publication3,
     "Publication4": Publication4
@@ -53,10 +53,14 @@ export default function Publications() {
     }
 
     useEffect(() => {
+        if (!searchTerm) {
+            init();
+        }
         const searchDocsByTitle = async () => {
+            setIsLoading(true);
             if (searchTerm) {
                 try {
-                    const res = await axios.get(`http://localhost:3000/search/bytitle?title=${searchTerm}`);
+                    const res = await axios.get(`http://localhost:3000/search/byTitle`, { params: { substring: searchTerm } });
                     setSearchResults(res.data);
                 } catch (error) {
                     console.error('Error searching documents:', error);
@@ -64,10 +68,10 @@ export default function Publications() {
             } else {
                 setSearchResults([]);
             }
+            setIsLoading(false);
         };
 
         searchDocsByTitle();
-        init();
     }, [searchTerm]);
 
     const handleChange = (event, value) => {
@@ -92,26 +96,33 @@ export default function Publications() {
                         variant="outlined"
                         sx={{ marginBottom: "20px" }}
                     />
-                    {searchResults.map((publication) => (
-                        <Publication publication={publication} key={publication._id} />
-                    ))}
                     {isLoading ? (
                         <CircularProgress />
-                    ) : publications.length === 0 ? (
-                        <Typography variant="h6" component="h4" align="center" gutterBottom> No documents found </Typography>
+                    ) : searchTerm ? (
+                        searchResults.length === 0 ? (
+                            <Typography variant="h6" component="h4" align="center" gutterBottom> No documents found </Typography>
+                        ) : (
+                            searchResults.map((publication) => (
+                                <Publication publication={publication} key={publication._id} />
+                            ))
+                        )
                     ) : (
-                        <>
-                            <Grid container spacing={4} justifyContent="center">
-                                {publications.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((publication) => (
-                                    publication && (
-                                        <Grid item xs={12} sm={6} md={4} key={publication.title}>
-                                            <Publication publication={publication} />
-                                        </Grid>
-                                    )
-                                ))}
-                            </Grid>
-                            <Pagination count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
-                        </>
+                        publications.length === 0 ? (
+                            <Typography variant="h6" component="h4" align="center" gutterBottom> No documents found </Typography>
+                        ) : (
+                            <>
+                                <Grid container spacing={4} justifyContent="center">
+                                    {publications.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((publication) => (
+                                        publication && (
+                                            <Grid item xs={12} sm={6} md={4} key={publication.title}>
+                                                <Publication publication={publication} />
+                                            </Grid>
+                                        )
+                                    ))}
+                                </Grid>
+                                <Pagination count={Math.ceil(publications.length / itemsPerPage)} page={page} onChange={handleChange} />
+                            </>
+                        )
                     )}
                 </Box>
             </Box>
