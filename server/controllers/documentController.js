@@ -81,7 +81,7 @@ const getAllDocuments = async (req, res) => {
 
 const getDocumentsByUsername = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username } = req.query;
     if (!username) {
       return res.status(400).json({ error: "Please provide the document owner's username." });
     }
