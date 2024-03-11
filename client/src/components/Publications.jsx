@@ -44,8 +44,8 @@ export default function Publications() {
                     "Content-Type": "application/json"
                 }
             });
-            console.log('Response:', res); // Log the entire response
             setPublications(res.data);
+            // console.log(res.data);
         } catch (error) {
             console.error('Error fetching documents:', error); // Log any errors
         }
@@ -53,15 +53,14 @@ export default function Publications() {
     }
 
     useEffect(() => {
-        if (!searchTerm) {
-            init();
-        }
         const searchDocsByTitle = async () => {
             setIsLoading(true);
             if (searchTerm) {
+                // console.log('searching for:', searchTerm);
                 try {
-                    const res = await axios.get(`http://localhost:3000/search/byTitle`, { params: { substring: searchTerm } });
+                    const res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`,);
                     setSearchResults(res.data);
+                    // console.log(res.data);
                 } catch (error) {
                     console.error('Error searching documents:', error);
                 }
@@ -71,7 +70,11 @@ export default function Publications() {
             setIsLoading(false);
         };
 
-        searchDocsByTitle();
+        if (searchTerm) {
+            searchDocsByTitle();
+        } else {
+            init(); // Fetch all documents if no search term is provided
+        }
     }, [searchTerm]);
 
     const handleChange = (event, value) => {
@@ -102,6 +105,7 @@ export default function Publications() {
                         searchResults.length === 0 ? (
                             <Typography variant="h6" component="h4" align="center" gutterBottom> No documents found </Typography>
                         ) : (
+                            // console.log(searchResults),
                             searchResults.map((publication) => (
                                 <Publication publication={publication} key={publication._id} />
                             ))

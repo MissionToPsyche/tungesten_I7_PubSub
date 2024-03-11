@@ -2,7 +2,7 @@ const {Document, Comment} = require("../model/documentSchema");
 
 const searchDocsByTitle = async (req, res) => {
     try {
-        const { substring } = req.body;
+        const { substring } = req.query;
         const filteredDocuments = await Document.find({ title: { $regex: new RegExp(substring, 'i') } });
         const documentsWithRelevance = filteredDocuments.map(document => {
             const relevanceScore = calculateRelevance(document.title, substring);
