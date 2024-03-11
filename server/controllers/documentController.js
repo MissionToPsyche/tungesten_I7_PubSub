@@ -3,8 +3,8 @@ const { Document, Comment } = require('../model/documentSchema');
 const AWS = require('aws-sdk');
 const bucketName = process.env.AWS_BUCKET_NAME;
 AWS.config.update({
-  accessKeyId: 'AKIA2PZWP33FERNV4W54',
-  secretAccessKey: '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',
+  accessKeyId: '',
+  secretAccessKey: '',
   region: 'us-west-2'
 });
 const s3 = new AWS.S3();
