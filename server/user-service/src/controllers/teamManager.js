@@ -82,6 +82,37 @@ async function updateTeam(req, res) {
     }
 }
 
+async function deleteTeam(req, res) {
+    const { teamName } = req.body;
+    try {
+        // Find the team by name
+        const team = await Team.findOne({ name: teamName });
+
+        if (!team) {
+            return res.status(404).json({ message: 'Team not found.' });
+        }
+
+        // Remove the team from all users' documents
+        await User.updateMany({ teams: team._id }, { $pull: { teams: team._id } });
+
+        // Delete the team
+        await team.deleteOne({ name: teamName });
+        res.status(200).json({ message: 'Team deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting team:", error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+async function getTeam(req, res) {
+    const { teamName } = req.body;
+    try {
+        const team = await Team.findOne({ name: teamName }).populate('members', 'name email role -_id').select('-_id -__v');
+        res.status(200).json({ team });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 
 module.exports = { createTeam, updateTeam, deleteTeam, getTeam }
