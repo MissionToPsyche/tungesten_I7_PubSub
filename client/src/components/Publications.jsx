@@ -58,6 +58,7 @@ export default function Publications() {
 
     const demoInitMethod = () => {
         setIsLoading(true);
+		// documentAccess will also be given from the backend in this api call
         let arr = [
             {
                 title: 'document 1',
@@ -116,6 +117,8 @@ export default function Publications() {
 				documentAccess: ["Share", "Read", "Edit"]
             }
         ];
+
+		// if later on , we decide to add new api for adding documentAccess, then the code will be imlemented here.
         setPublications(arr);
         setTimeout(() => {
             setIsLoading(false);
@@ -214,12 +217,12 @@ function Publication({ publication }) {
                                 open={open}
                                 onClose={handleClosePermissionMenu}
                                 anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
+									vertical: 'top',
+									horizontal: 'right',
                                 }}
                                 transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
+									vertical: 'top',
+									horizontal: 'left',
                                 }}
                             >
                                 {documentAccess && documentAccess.includes("Edit") && (<MenuItem onClick={handleClosePermissionMenu}><EditIcon /> Edit</MenuItem>) }
