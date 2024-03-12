@@ -90,14 +90,13 @@ export default function Publications() {
         <div>
             <Typography variant="h3" sx={{ margin: "30px" }}>Publications</Typography>
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
-                <Box maxWidth={800}>
+                <Box maxWidth={800} width="100%">
                     <TextField
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        placeholder="Search by title"
-                        fullWidth
+                        placeholder="Search Publications"
                         variant="outlined"
-                        sx={{ marginBottom: "20px" }}
+                        sx={{ marginBottom: "20px", width: "50%" }}
                     />
                     {isLoading ? (
                         <CircularProgress />
