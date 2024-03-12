@@ -100,7 +100,7 @@ const DocumentPermissionForm = () => {
                     >
                         <MenuItem value="read">Read</MenuItem>
                         <MenuItem value="edit">Edit</MenuItem>
-
+                        <MenuItem value="share">Share</MenuItem>
                     </Select>
                 </FormControl>
                 <Button type="submit" variant="contained" color="primary">Submit</Button>
