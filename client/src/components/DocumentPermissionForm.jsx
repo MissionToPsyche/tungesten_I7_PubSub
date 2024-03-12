@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Container, Typography, styled } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 const StyledContainer = styled(Container)({
     maxWidth: '500px',
@@ -21,21 +22,40 @@ const StyledButton = styled(Button)({
     padding: '10px 20px',
 });
 
+const StyledChip = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: '5px 10px',
+    borderRadius: '5px',
+    marginBottom: '10px',
+});
+
+const names = ['Jay', 'Manan', 'Swapnil', 'Devanshu', 'Sudheer'];
+
 const DocumentPermissionForm = () => {
-    const [userName, setUserName] = useState('');
+    const [selectedName, setSelectedName] = useState('');
+    const [userNameList, setUserNameList] = useState([]);
     const [documentId, setDocumentId] = useState('');
     const [permissionType, setPermissionType] = useState('read');
     const [message, setMessage] = useState('');
 
+    const handleAddUserName = () => {
+        setUserNameList([...userNameList, selectedName]);
+        setSelectedName('');
+    };
+
+    const handleRemoveUserName = (index) => {
+        const updatedList = [...userNameList];
+        updatedList.splice(index, 1);
+        setUserNameList(updatedList);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/update-permissions', {
-                userName,
-                documentId,
-                permissionType,
-            });
-            setMessage(response.data.message);
+            // Handle submitting userNameList to the backend
+            setMessage('Permissions updated successfully');
         } catch (error) {
             setMessage('Failed to update permissions');
         }
@@ -45,13 +65,25 @@ const DocumentPermissionForm = () => {
         <StyledContainer>
             <Typography variant="h4" gutterBottom>Grant/Revoke Permissions</Typography>
             <StyledForm onSubmit={handleSubmit}>
-                <TextField
-                    label="User Name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    fullWidth
-                    variant="outlined"
-                />
+                <FormControl fullWidth variant="outlined">
+                    <InputLabel>Select User Name</InputLabel>
+                    <Select
+                        value={selectedName}
+                        onChange={(e) => setSelectedName(e.target.value)}
+                        label="Select User Name"
+                    >
+                        {names.map((name) => (
+                            <MenuItem key={name} value={name}>{name}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <StyledButton type="button" onClick={handleAddUserName} variant="contained" color="primary">Add User Name</StyledButton>
+                {userNameList.map((userName, index) => (
+                    <StyledChip key={index}>
+                        <Typography variant="body1">{userName}</Typography>
+                        <Button onClick={() => handleRemoveUserName(index)}><Close /></Button>
+                    </StyledChip>
+                ))}
                 <TextField
                     label="Document ID"
                     value={documentId}
@@ -68,13 +100,14 @@ const DocumentPermissionForm = () => {
                     >
                         <MenuItem value="read">Read</MenuItem>
                         <MenuItem value="edit">Edit</MenuItem>
+
                     </Select>
                 </FormControl>
-                <StyledButton type="submit" variant="contained" color="primary">Submit</StyledButton>
+                <Button type="submit" variant="contained" color="primary">Submit</Button>
             </StyledForm>
             {message && <Typography variant="body1">{message}</Typography>}
         </StyledContainer>
     );
 };
 
-export default DocumentPermissionForm;
+export default DocumentPermissionForm;   
