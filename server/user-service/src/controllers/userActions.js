@@ -38,6 +38,25 @@ async function userLogin(req, res) {
     }
 }
 
+async function searchUser(req, res) {
+    let { user, limit } = req.query;
+    if (typeof user !== 'string') {
+        return res.status(400).send("Invalid search query");
+    }
+    query = user.trim();
+
+    // Validate and sanitize limit
+    limit = parseInt(limit, 10) || DEFAULT_SEARCH_LIMIT;
+    if (limit < 1 || limit > MAX_SEARCH_LIMIT) {
+        return res.status(400).send(`Limit must be between 1 and ${MAX_SEARCH_LIMIT}`);
+    }
+    try {
+        const results = await User.fuzzySearch(query).limit(limit).select('-_id -password -__v -teams -role -createdAt');
+        res.json(results);
+    } catch (error) {
+        res.status(500).send("Error performing search");
+    }
+}
 
 
 module.exports = { userLogin, searchUser, getAllUsers, getUserByUsername }
