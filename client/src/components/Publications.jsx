@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
+import PublicIcon from '@mui/icons-material/Public';
 
 const files = {
     "Publication1": Publication1,
@@ -184,6 +185,7 @@ function Publication({ publication }) {
                         <div>
                             <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
                             <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
+                            <PublicIcon onClick={() => navigate('/DocumentPermissionForm')}></PublicIcon>
                             <FormGroup>
                                 <FormControlLabel
                                     control={
