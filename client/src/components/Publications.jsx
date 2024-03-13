@@ -194,6 +194,11 @@ function Publication({ publication }) {
       setAnchorEl(null);
     };
 
+	useEffect(() => {
+		// when the accesses change, the api call will be made from here
+		// and the view will also be dynamically updated.
+	}, [])
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
