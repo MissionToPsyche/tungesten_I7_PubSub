@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import UploadIcon from '@mui/icons-material/Upload';
-import { Typography, TextField, Grid, Button } from "@mui/material"
+import { Typography, TextField, Box, Button, Card, CardContent } from "@mui/material"
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function UploadDoc() {
@@ -11,6 +11,7 @@ export default function UploadDoc() {
     const [textInput, setTextInput] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [year, setYear] = useState("");
 
     const handleTextInputChange = (event) => {
         setTextInput(event.target.value);
@@ -22,27 +23,28 @@ export default function UploadDoc() {
     return (
         <div>
             <Typography variant="h3" sx={{ margin: '30px' }}>Upload Publication</Typography>
-            <Grid container spacing={2} alignItems="center" direction="column">
-                <Grid item>
-                    <TextField variant="outlined" label="Title" type={"text"} onChange={e => setTitle(e.target.value)} />
-                </Grid>
-                <Grid item>
-                    <Typography variant="h7">
-                        Paste Text or upload a file:
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <TextField
-                        id="text-input"
-                        label="Text Input"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        value={textInput}
-                        onChange={handleTextInputChange}
-                    />
-                </Grid>
-                <Grid item>
+            <Card variant="outlined" sx={{ padding: '20px', maxWidth: 500, margin: 'auto' }}>
+                <TextField variant="outlined" label="Title" type={"text"} onChange={e => setTitle(e.target.value)} fullWidth />
+                <TextField
+                    id="text-input"
+                    label="Abstract"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    value={textInput}
+                    onChange={handleTextInputChange}
+                    fullWidth
+                    sx={{ marginTop: '20px' }}
+                />
+                <TextField
+                    variant="outlined"
+                    label="Year"
+                    type="number"
+                    onChange={e => setYear(e.target.value)}
+                    fullWidth
+                    sx={{ marginTop: '20px' }}
+                />
+                <Box sx={{ marginTop: '20px' }}>
                     <input
                         accept=".txt"
                         id="contained-button-file"
@@ -65,8 +67,8 @@ export default function UploadDoc() {
                             {selectedFile.name}
                         </Typography>
                     )}
-                </Grid>
-                <Grid item>
+                </Box>
+                <Box sx={{ marginTop: '20px' }}>
                     {isLoading ? (
                         <CircularProgress color='primary' thickness={4} />
                     ) : (
@@ -79,18 +81,16 @@ export default function UploadDoc() {
                             onClick={async () => {
                                 setIsLoading(true);
                                 const formData = new FormData();
-                                if (selectedFile) {
-                                    formData.append('file', selectedFile);
-                                } else {
-                                    formData.append('content', textInput);
-                                }
+                                formData.append('file', selectedFile);
+                                formData.append('abstract', textInput);
                                 formData.append('title', title);
                                 formData.append('ownerUsername', "testUser");
+                                formData.append('author', "testUser");
 
                                 try {
                                     await axios.post("http://localhost:3000/docs/upload", formData, {
                                         headers: {
-                                            "Content-Type": "application/json"
+                                            "Content-Type": "multipart/form-data"
                                         }
                                     });
                                     alert("Publication uploaded successfully!");
@@ -109,8 +109,8 @@ export default function UploadDoc() {
                             Upload
                         </Button>
                     )}
-                </Grid>
-            </Grid>
+                </Box>
+            </Card>
 
         </div>
     )
