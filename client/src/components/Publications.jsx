@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
+import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination, Menu, MenuItem, Checkbox } from "@mui/material";
 import axios from "axios";
 import Publication1 from "../assets/files/Publication1.pdf"
 import Publication2 from "../assets/files/Publication2.pdf"
@@ -8,6 +8,7 @@ import Publication4 from "../assets/files/Publication4.pdf"
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useNavigate } from 'react-router-dom';
 import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,6 +36,27 @@ export default function Publications() {
     const itemsPerPage = 6;
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [filters, setFilters] = useState({
+        title: false,
+        author: false,
+        year: false,
+        abstract: false
+    });
+
+    const handleClick = (event, filterType) => {
+        setAnchorEl(event.currentTarget);
+        setFilters({ ...filters, [filterType]: !filters[filterType] });
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleFilterSelect = (filterType) => {
+        setFilters({ ...filters, [filterType]: !filters[filterType] });
+    };
 
     const init = async () => {
         setIsLoading(true);
@@ -98,6 +120,33 @@ export default function Publications() {
                         variant="outlined"
                         sx={{ marginBottom: "20px", width: "50%" }}
                     />
+                    <Button aria-controls="simple-menu" aria-haspopup="true" sx={{ marginTop: "10px", marginLeft: "10px" }} onClick={handleClick}>
+                        <MoreVertIcon />More
+                    </Button>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={() => handleFilterSelect('title')}>
+                            <Checkbox checked={filters.title} />
+                            Title
+                        </MenuItem>
+                        <MenuItem onClick={() => handleFilterSelect('author')}>
+                            <Checkbox checked={filters.author} />
+                            Author
+                        </MenuItem>
+                        <MenuItem onClick={() => handleFilterSelect('year')}>
+                            <Checkbox checked={filters.year} />
+                            Year
+                        </MenuItem>
+                        <MenuItem onClick={() => handleFilterSelect('abstract')}>
+                            <Checkbox checked={filters.abstract} />
+                            Abstract
+                        </MenuItem>
+                    </Menu>
                     {isLoading ? (
                         <CircularProgress />
                     ) : searchTerm ? (
