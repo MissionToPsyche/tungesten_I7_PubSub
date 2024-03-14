@@ -18,7 +18,8 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
-import PublicIcon from '@mui/icons-material/Public';
+import PublicIcon from '@mui/icons-material/Public'; //adding the icons for using the icon pack
+
 
 const files = {
     "Publication1": Publication1,
@@ -185,7 +186,8 @@ function Publication({ publication }) {
                         <div>
                             <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
                             <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
-                            <PublicIcon onClick={() => navigate('/DocumentPermissionForm')}></PublicIcon>
+                            <PublicIcon onClick={() => navigate('/DocumentPermissionForm')}></PublicIcon> {/* redirecting to the form */}
+
                             <FormGroup>
                                 <FormControlLabel
                                     control={

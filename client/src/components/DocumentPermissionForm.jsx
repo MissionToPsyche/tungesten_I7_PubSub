@@ -32,6 +32,7 @@ const StyledChip = styled('div')({
 });
 
 const names = ['Jay', 'Manan', 'Swapnil', 'Devanshu', 'Sudheer'];
+// array of username to select from
 
 const DocumentPermissionForm = () => {
     const [selectedName, setSelectedName] = useState('');
@@ -62,11 +63,13 @@ const DocumentPermissionForm = () => {
     };
 
     return (
-        <StyledContainer>
+        <StyledContainer> {/* form to change the status of the permission */}
+
             <Typography variant="h4" gutterBottom>Grant/Revoke Permissions</Typography>
             <StyledForm onSubmit={handleSubmit}>
                 <FormControl fullWidth variant="outlined">
                     <InputLabel>Select User Name</InputLabel>
+                    {/* Drop down menu for selecting the users */}
                     <Select
                         value={selectedName}
                         onChange={(e) => setSelectedName(e.target.value)}
@@ -85,6 +88,7 @@ const DocumentPermissionForm = () => {
                     </StyledChip>
                 ))}
                 <TextField
+                    // get document ID and related document 
                     label="Document ID"
                     value={documentId}
                     onChange={(e) => setDocumentId(e.target.value)}
@@ -98,6 +102,7 @@ const DocumentPermissionForm = () => {
                         onChange={(e) => setPermissionType(e.target.value)}
                         label="Permission Type"
                     >
+                        {/* three main permission to grant or revoke */}
                         <MenuItem value="read">Read</MenuItem>
                         <MenuItem value="edit">Edit</MenuItem>
                         <MenuItem value="share">Share</MenuItem>
