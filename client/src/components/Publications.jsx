@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination, Menu, MenuItem, Checkbox } from "@mui/material";
+import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
 import axios from "axios";
 import Publication1 from "../assets/files/Publication1.pdf"
 import Publication2 from "../assets/files/Publication2.pdf"
@@ -37,25 +37,19 @@ export default function Publications() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [showFilters, setShowFilters] = useState(false);
     const [filters, setFilters] = useState({
-        title: false,
-        author: false,
-        year: false,
-        abstract: false
+        author: '',
+        abstract: '',
+        year: ''
     });
 
-    const handleClick = (event, filterType) => {
-        setAnchorEl(event.currentTarget);
-        setFilters({ ...filters, [filterType]: !filters[filterType] });
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleFilterSelect = (filterType) => {
-        setFilters({ ...filters, [filterType]: !filters[filterType] });
+    // Add this function to handle filter changes
+    const handleFilterChange = (event) => {
+        setFilters({
+            ...filters,
+            [event.target.name]: event.target.value
+        });
     };
 
     const init = async () => {
@@ -74,30 +68,41 @@ export default function Publications() {
         setIsLoading(false);
     }
 
-    useEffect(() => {
-        const searchDocsByTitle = async () => {
-            setIsLoading(true);
-            if (searchTerm) {
-                // console.log('searching for:', searchTerm);
-                try {
-                    const res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`,);
-                    setSearchResults(res.data);
-                    // console.log(res.data);
-                } catch (error) {
-                    console.error('Error searching documents:', error);
-                }
-            } else {
-                setSearchResults([]);
-            }
-            setIsLoading(false);
-        };
-
+    const searchDocs = async () => {
+        setIsLoading(true);
         if (searchTerm) {
-            searchDocsByTitle();
+            try {
+                let res;
+                if (Object.values(filters).some(filter => filter)) {
+                    const { author, abstract, year } = filters;
+                    console.log(author, abstract, year);
+                    res = await axios.get(`http://localhost:3000/search/byFilters?author=${author}&abstract=${abstract}&year=${year}`);
+                    console.log("filters:", res);
+                } else {
+                    res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`);
+                    console.log("title", res);
+                }
+                setSearchResults(res.data);
+            } catch (error) {
+                console.error('Error searching documents:', error);
+            }
         } else {
-            init(); // Fetch all documents if no search term is provided
+            setSearchResults([]);
+        }
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        if (searchTerm) {
+            searchDocs();
+        } else {
+            init();
         }
     }, [searchTerm]);
+
+    useEffect(() => {
+        searchDocs();
+    }, [filters]);
 
     const handleChange = (event, value) => {
         setPage(value);
@@ -113,40 +118,42 @@ export default function Publications() {
             <Typography variant="h3" sx={{ margin: "30px" }}>Publications</Typography>
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
                 <Box maxWidth={800} width="100%">
-                    <TextField
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Search Publications"
-                        variant="outlined"
-                        sx={{ marginBottom: "20px", width: "50%" }}
-                    />
-                    <Button aria-controls="simple-menu" aria-haspopup="true" sx={{ marginTop: "10px", marginLeft: "10px" }} onClick={handleClick}>
-                        <MoreVertIcon />More
-                    </Button>
-                    <Menu
-                        id="simple-menu"
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => handleFilterSelect('title')}>
-                            <Checkbox checked={filters.title} />
-                            Title
-                        </MenuItem>
-                        <MenuItem onClick={() => handleFilterSelect('author')}>
-                            <Checkbox checked={filters.author} />
-                            Author
-                        </MenuItem>
-                        <MenuItem onClick={() => handleFilterSelect('year')}>
-                            <Checkbox checked={filters.year} />
-                            Year
-                        </MenuItem>
-                        <MenuItem onClick={() => handleFilterSelect('abstract')}>
-                            <Checkbox checked={filters.abstract} />
-                            Abstract
-                        </MenuItem>
-                    </Menu>
+                        <TextField
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            placeholder="Search Publications"
+                            variant="outlined"
+                            sx={{ marginBottom: "20px", width: "50%" }}
+                        />
+                    {showFilters && (
+                        <>
+                            <TextField
+                                name="author"
+                                value={filters.author}
+                                onChange={handleFilterChange}
+                                placeholder="Filter by author"
+                                variant="outlined"
+                                sx={{ marginBottom: "20px", width: "50%" }}
+                            />
+                            <TextField
+                                name="abstract"
+                                value={filters.abstract}
+                                onChange={handleFilterChange}
+                                placeholder="Filter by abstract"
+                                variant="outlined"
+                                sx={{ marginBottom: "20px", width: "50%" }}
+                            />
+                            <TextField
+                                name="year"
+                                value={filters.year}
+                                onChange={handleFilterChange}
+                                placeholder="Filter by year"
+                                variant="outlined"
+                                sx={{ marginBottom: "20px", width: "50%" }}
+                            />
+                        </>
+                    )}
+                    <Button onClick={() => setShowFilters(!showFilters)}><MoreVertIcon />More</Button>
                     {isLoading ? (
                         <CircularProgress />
                     ) : searchTerm ? (

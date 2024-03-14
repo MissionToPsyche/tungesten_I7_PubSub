@@ -18,7 +18,7 @@ const searchDocsByTitle = async (req, res) => {
 
 const searchDocsByFilters = async (req, res) => {
     try {
-      const { username, abstract, year } = req.body;
+      const { username, abstract, year } = req.query;
       const filter = {};
       if (username !== undefined) filter['author'] = { $regex: new RegExp(username, 'i') };
       if (abstract !== undefined) filter['abstract'] = { $regex: new RegExp(abstract, 'i') };
