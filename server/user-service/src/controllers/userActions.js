@@ -103,5 +103,23 @@ async function getAllUsers(req, res) {
     }
 };
 
+async function getUserByUsername(req, res) {
+    const { username } = req.params;
+
+    try {
+
+        const user = await User.findOne({ username: username })
+            .select('-password -_id -__v')
+            .populate('teams', 'name');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).send("Error fetching user");
+    }
+};
 
 module.exports = { userLogin, searchUser, getAllUsers, getUserByUsername }
