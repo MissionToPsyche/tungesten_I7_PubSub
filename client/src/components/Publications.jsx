@@ -118,13 +118,13 @@ export default function Publications() {
             <Typography variant="h3" sx={{ margin: "30px" }}>Publications</Typography>
             <Box display="flex" justifyContent="center" flexWrap="wrap" minHeight="100vh">
                 <Box maxWidth={800} width="100%">
-                        <TextField
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            placeholder="Search Publications"
-                            variant="outlined"
-                            sx={{ marginBottom: "20px", width: "50%" }}
-                        />
+                    <TextField
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search Publications"
+                        variant="outlined"
+                        sx={{ marginBottom: "20px", width: "40%", marginRight: "10px" }}
+                    />
                     {showFilters && (
                         <>
                             <TextField
@@ -133,7 +133,7 @@ export default function Publications() {
                                 onChange={handleFilterChange}
                                 placeholder="Filter by author"
                                 variant="outlined"
-                                sx={{ marginBottom: "20px", width: "50%" }}
+                                sx={{ marginBottom: "20px", width: "40%", marginRight: "10px" }}
                             />
                             <TextField
                                 name="abstract"
@@ -141,7 +141,7 @@ export default function Publications() {
                                 onChange={handleFilterChange}
                                 placeholder="Filter by abstract"
                                 variant="outlined"
-                                sx={{ marginBottom: "20px", width: "50%" }}
+                                sx={{ marginBottom: "20px", width: "40%", marginRight: "10px" }}
                             />
                             <TextField
                                 name="year"
@@ -149,7 +149,7 @@ export default function Publications() {
                                 onChange={handleFilterChange}
                                 placeholder="Filter by year"
                                 variant="outlined"
-                                sx={{ marginBottom: "20px", width: "50%" }}
+                                sx={{ marginBottom: "20px", width: "40%" }}
                             />
                         </>
                     )}
