@@ -58,5 +58,50 @@ async function searchUser(req, res) {
     }
 }
 
+async function getAllUsers(req, res) {
+    let { page, limit, sortBy, sortOrder } = req.query;
+
+    // Validate and sanitize page and limit
+    page = parseInt(page, 10) || 1;
+    limit = parseInt(limit, 10) || DEFAULT_SEARCH_LIMIT;
+
+    // Validate sortBy field
+    if (!allowedSortFields.includes(sortBy)) {
+        return res.status(400).json({ message: 'Invalid sort field.' });
+    }
+
+    // Validate sortOrder and default to ascending if invalid value is provided
+    sortOrder = sortOrder === 'desc' ? -1 : 1;
+
+    try {
+        const total = await User.countDocuments();
+        const totalPages = Math.ceil(total / limit);
+
+        // Check if requested page exceeds total pages
+        if (page > totalPages) {
+            return res.status(400).json({ message: `Requested page exceeds the total number of pages (${totalPages}).` });
+        }
+
+        const skip = (page - 1) * limit;
+        const users = await User.find()
+            .sort({ [sortBy]: sortOrder })
+            .skip(skip)
+            .limit(limit)
+            .select('-_id -__v -teams -password -createdAt');
+
+        res.json({
+            users,
+            total,
+            totalPages,
+            currentPage: page,
+            sortBy,
+            sortOrder: sortOrder === 1 ? 'asc' : 'desc'
+        });
+    } catch (error) {
+        console.error("Error fetching users with sorting:", error);
+        res.status(500).send("Error fetching users");
+    }
+};
+
 
 module.exports = { userLogin, searchUser, getAllUsers, getUserByUsername }
