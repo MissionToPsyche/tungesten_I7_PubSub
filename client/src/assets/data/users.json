@@ -1,0 +1,35 @@
+[
+    {
+        "userId": 1,
+        "username": "john",
+        "password": "john123",
+        "role": "admin",
+        "image": "https://www.w3schools.com/howto/img_avatar.png",
+        "email": "john@example.com",
+        "dateOfBirth": "1990-01-01",
+        "publishedDocuments": [],
+        "sharedDocuments": []
+    },
+    {
+        "userId": 2,
+        "username": "jane",
+        "password": "jane123",
+        "role": "user",
+        "image": "https://www.w3schools.com/howto/img_avatar2.png",
+        "email": "jane@example.com",
+        "dateOfBirth": "1992-02-02",
+        "publishedDocuments": [],
+        "sharedDocuments": []
+    },
+    {
+        "userId": 3,
+        "username": "doe",
+        "password": "doe123",
+        "role": "user",
+        "image": "https://www.w3schools.com/howto/img_avatar3.png",
+        "email": "doe@example.com",
+        "dateOfBirth": "1994-03-03",
+        "publishedDocuments": [],
+        "sharedDocuments": []
+    }
+]

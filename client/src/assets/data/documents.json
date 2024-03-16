@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "title": "GL Guess",
+        "abstract": "Cryptocurrencies are peer-to-peer-based transaction systems where the data exchanges are secured using the secure hash algorithm (SHA)-256 and message digest (MD)-5 algorithms. The prices of cryptocurrencies are highly volatile and follow stochastic moments and have reached their unpredictable limits. They are commonly used for investment and have become a substitute for other types of investment like metals, estates, and the stock market.",
+        "yearPublished": 2020,
+        "file": "../files/Publication1.pdf",
+        "user": {
+            "userId": 1,
+            "username": "john",
+            "role": "admin"
+        }
+    },
+    {
+        "id": 2,
+        "title": "I Charge, Therefore I Drive: Current State of Electric Vehicle Charging Systems",
+        "abstract": "I charge, therefore I drive. Is this the new paradigm? The ambitious goals set by governments worldwide to phase out gasoline-powered cars are the driving force behind the upgrade of electric vehicle (EV) charging infrastructures. The EV industry and roadways departments may be asked to invest more in wireless charging, that is, without the need for any cable. Transmitter pads that can charge the EV in the garage, or even briefly at traffic lights, may convey the stationary wireless charge, whereas coils embedded into roadways may power EVs as they drive overhead. The standardized wireless charge appears to be the optimum solution to placate the anxiety of drivers.",
+        "yearPublished": 2021,
+        "file": "../files/Publication2.pdf",
+        "user": {
+            "userId": 2,
+            "username": "jane",
+            "role": "user"
+        }
+    },
+    {
+        "id": 3,
+        "title": "Underwater vehicles: A review of the current state of the art and future directions",
+        "abstract": "Deep Reinforcement Learning (DRL) methods are increasingly being applied in Unmanned Underwater Vehicles (UUV) providing adaptive control responses to environmental disturbances. However, in physical platforms, these methods are hindered by their inherent data inefficiency and performance degradation when subjected to unforeseen process variations.",
+        "yearPublished": 2022,
+        "file": "../files/Publication3.pdf",
+        "user": {
+            "userId": 3,
+            "username": "doe",
+            "role": "user"
+        }
+    }
+]
