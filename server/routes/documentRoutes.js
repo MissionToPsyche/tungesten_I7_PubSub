@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const docRouter = express.Router();
-const { uploadDocument, getAllDocuments, getDocumentsByUsername } = require('../controllers/documentController');
+const { uploadDocument, getAllDocuments, getDocumentsByUsername, postNewCommentOnTheDocument, getCommentsForDocument } = require('../controllers/documentController');
 // Login endpoint
 docRouter.post('/upload', upload.single('file'), uploadDocument);
 

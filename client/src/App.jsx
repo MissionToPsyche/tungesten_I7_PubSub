@@ -12,6 +12,7 @@ import ViewPDF from './components/viewPDF';
 import UpdateUser from './components/UpdateUser';
 import AuthProvider from './providers/AuthProvider';
 import RoutesComp from './routes/RoutesComp';
+import DocumentPermissionForm from './components/DocumentPermissionForm';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/publication/:pubId" element={<Publication />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />
           <Route path="/ViewPDF/" element={<ViewPDF />} />
+          <Route path="/DocumentPermissionForm" element={<DocumentPermissionForm />} />
         </Routes>
       </Router>
     </div>

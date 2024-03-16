@@ -24,6 +24,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PublicIcon from '@mui/icons-material/Public'; //adding the icons for using the icon pack
+
 
 const files = {
     "Publication1": Publication1,
@@ -52,8 +54,8 @@ export default function Publications() {
     }
 
     useEffect(() => {
-        // init();
-        demoInitMethod();
+        init();
+        // demoInitMethod();
     }, []);
 
     const demoInitMethod = () => {
@@ -234,6 +236,8 @@ function Publication({ publication }) {
                                 {documentAccess && documentAccess.includes("Read") && (<MenuItem onClick={handleClosePermissionMenu}><ChromeReaderModeIcon /> Read</MenuItem>) }
                                 {documentAccess && documentAccess.includes("Share") && (<MenuItem onClick={handleClosePermissionMenu}><IosShareIcon /> Share</MenuItem>) }
                             </Menu>
+                            <PublicIcon onClick={() => navigate('/DocumentPermissionForm')}></PublicIcon> {/* redirecting to the form */}
+
                             <FormGroup>
                                 <FormControlLabel
                                     control={
