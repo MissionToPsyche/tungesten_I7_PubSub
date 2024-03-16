@@ -1,8 +1,8 @@
-const Document = require("../model/documentSchema");
+const {Document, Comment} = require("../model/documentSchema");
 
 const searchDocsByTitle = async (req, res) => {
     try {
-        const { substring } = req.body;
+        const { substring } = req.query;
         const filteredDocuments = await Document.find({ title: { $regex: new RegExp(substring, 'i') } });
         const documentsWithRelevance = filteredDocuments.map(document => {
             const relevanceScore = calculateRelevance(document.title, substring);
@@ -18,7 +18,7 @@ const searchDocsByTitle = async (req, res) => {
 
 const searchDocsByFilters = async (req, res) => {
     try {
-      const { username, abstract, year } = req.body;
+      const { username, abstract, year } = req.query;
       const filter = {};
       if (username !== undefined) filter['author'] = { $regex: new RegExp(username, 'i') };
       if (abstract !== undefined) filter['abstract'] = { $regex: new RegExp(abstract, 'i') };
