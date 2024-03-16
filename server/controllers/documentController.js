@@ -52,13 +52,13 @@ const getDocumentFromS3 = async (req, res) => {
 
 const uploadDocument = async (req, res) => {
   try {
-    const { title, content, ownerUsername } = req.body;
+    const { title, abstract, author } = req.body;
     // Validity check to see if the document title already exists
     const existingDocument = await Document.findOne({ title });
     if (existingDocument) {
       return res.status(400).json({ error: 'A Document already exists with the same title.' });
     }
-    const newDocument = new Document({ title, content, metadata: { ownerUsername } });
+    const newDocument = new Document({ title, abstract, author, documentType: "research paper" });
     if (req.file) { // Assuming file is attached to req via middleware like multer
       const fileUploadResult = await uploadFileToS3(req.file);
       newDocument.fileUrl = fileUploadResult.Location; // Store the URL of the uploaded file
@@ -81,7 +81,7 @@ const getAllDocuments = async (req, res) => {
 
 const getDocumentsByUsername = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username } = req.query;
     if (!username) {
       return res.status(400).json({ error: "Please provide the document owner's username." });
     }
