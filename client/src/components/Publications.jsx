@@ -54,73 +54,73 @@ export default function Publications() {
     }
 
     useEffect(() => {
-        init();
-        // demoInitMethod();
+        //init();
+        demoInitMethod();
     }, []);
 
     const demoInitMethod = () => {
         setIsLoading(true);
-		// documentAccess will also be given from the backend in this api call
+        // documentAccess will also be given from the backend in this api call
         let arr = [
             {
                 title: 'document 1',
                 content: 'Content for demo doc 1',
                 comments: ['comment 1 for doc 1', 'comment 2 for doc 1'],
                 adminAccess: false,
-                documentAccess : ['Edit', 'Read', 'Share']
+                documentAccess: ['Edit', 'Read', 'Share']
             },
             {
                 title: 'document 2',
                 content: 'Content for demo doc 2',
                 comments: ['comment 1 for doc 2', 'comment 2 for doc 2'],
                 adminAccess: false,
-				documentAccess: ["Share", "Read"]
+                documentAccess: ["Share", "Read"]
             },
             {
                 title: 'document 3',
                 content: 'Content for demo doc 3',
                 comments: ['comment 1 for doc 3', 'comment 2 for doc 3'],
                 adminAccess: false,
-				documentAccess: ["Edit", "Read"]
+                documentAccess: ["Edit", "Read"]
             },
             {
                 title: 'document 4',
                 content: 'Content for demo doc 4',
                 comments: ['comment 1 for doc 4', 'comment 2 for doc 4'],
                 adminAccess: false,
-				documentAccess: ["Read"]
+                documentAccess: ["Read"]
             },
             {
                 title: 'document 5',
                 content: 'Content for demo doc 5',
                 comments: ['comment 1 for doc 5', 'comment 2 for doc 5'],
                 adminAccess: false,
-				documentAccess: ["Share"]
+                documentAccess: ["Share"]
             },
             {
                 title: 'document 6',
                 content: 'Content for demo doc 6',
                 comments: ['comment 1 for doc 6', 'comment 2 for doc 6'],
                 adminAccess: false,
-				documentAccess: ["Share", "Edit"]
+                documentAccess: ["Share", "Edit"]
             },
             {
                 title: 'document 7',
                 content: 'Content for demo doc 7',
                 comments: ['comment 1 for doc 7', 'comment 2 for doc 7'],
                 adminAccess: false,
-				documentAccess: ["Edit"]
+                documentAccess: ["Edit"]
             },
             {
                 title: 'document 8',
                 content: 'Content for demo doc 8',
                 comments: ['comment 1 for doc 8', 'comment 2 for doc 8'],
                 adminAccess: false,
-				documentAccess: ["Share", "Read", "Edit"]
+                documentAccess: ["Share", "Read", "Edit"]
             }
         ];
 
-		// if later on , we decide to add new api for adding documentAccess, then the code will be imlemented here.
+        // if later on , we decide to add new api for adding documentAccess, then the code will be imlemented here.
         setPublications(arr);
         setTimeout(() => {
             setIsLoading(false);
@@ -190,16 +190,16 @@ function Publication({ publication }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClickPermissionMenu = (event) => {
-      setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
     const handleClosePermissionMenu = () => {
-      setAnchorEl(null);
+        setAnchorEl(null);
     };
 
-	useEffect(() => {
-		// when the accesses change, the api call will be made from here
-		// and the view will also be dynamically updated.
-	}, [])
+    useEffect(() => {
+        // when the accesses change, the api call will be made from here
+        // and the view will also be dynamically updated.
+    }, [])
 
     return (
         <div>
@@ -216,7 +216,7 @@ function Publication({ publication }) {
                         <div>
                             <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
                             <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
-                            {documentAccess && documentAccess.length > 0 && (<MoreVertIcon onClick={handleClickPermissionMenu}></MoreVertIcon>) }
+                            {documentAccess && documentAccess.length > 0 && (<MoreVertIcon onClick={handleClickPermissionMenu}></MoreVertIcon>)}
                             <Menu
                                 id="demo-positioned-menu"
                                 aria-labelledby="demo-positioned-button"
@@ -224,17 +224,17 @@ function Publication({ publication }) {
                                 open={open}
                                 onClose={handleClosePermissionMenu}
                                 anchorOrigin={{
-									vertical: 'top',
-									horizontal: 'right',
+                                    vertical: 'top',
+                                    horizontal: 'right',
                                 }}
                                 transformOrigin={{
-									vertical: 'top',
-									horizontal: 'left',
+                                    vertical: 'top',
+                                    horizontal: 'left',
                                 }}
                             >
-                                {documentAccess && documentAccess.includes("Edit") && (<MenuItem onClick={handleClosePermissionMenu}><EditIcon /> Edit</MenuItem>) }
-                                {documentAccess && documentAccess.includes("Read") && (<MenuItem onClick={handleClosePermissionMenu}><ChromeReaderModeIcon /> Read</MenuItem>) }
-                                {documentAccess && documentAccess.includes("Share") && (<MenuItem onClick={handleClosePermissionMenu}><IosShareIcon /> Share</MenuItem>) }
+                                {documentAccess && documentAccess.includes("Edit") && (<MenuItem onClick={handleClosePermissionMenu}><EditIcon /> Edit</MenuItem>)}
+                                {documentAccess && documentAccess.includes("Read") && (<MenuItem onClick={handleClosePermissionMenu}><ChromeReaderModeIcon /> Read</MenuItem>)}
+                                {documentAccess && documentAccess.includes("Share") && (<MenuItem onClick={handleClosePermissionMenu}><IosShareIcon /> Share</MenuItem>)}
                             </Menu>
                             <PublicIcon onClick={() => navigate('/DocumentPermissionForm')}></PublicIcon> {/* redirecting to the form */}
 
