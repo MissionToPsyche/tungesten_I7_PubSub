@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import './AddUser.css'
 const AddUser = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -53,7 +53,7 @@ const AddUser = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form-container">
             <div>
                 <label htmlFor="firstName">First Name:</label>
                 <input
