@@ -31,5 +31,56 @@ function generateChunks(data) {
     return chunks;
 }
 
+async function requestSignedUrl(req, res) {
+    const { documentTitle, author, totalChunks } = req.body;
+    const documentId = new mongoose.Types.ObjectId();
+    const documentFolder = `${author}/${documentTitle.replace(/\s+/g, '-')}-${documentId}`;
+
+    let signedUrls = [];
+    let tempChunkIds = [];
+
+    try {
+        for (let i = 1; i <= totalChunks; i++) {
+            const s3Key = `${documentFolder}/chunk${i}`;
+            const signedUrl = await s3Operations.generateSignedUrlForPut(process.env.AWS_BUCKET_NAME, s3Key, 60 * 15);
+            signedUrls.push({ s3Key, signedUrl });
+
+            // Save the temp chunk info (without hash and size yet)
+            const tempChunk = new Chunk({
+                sequence: i,
+                s3Key: s3Key,
+                hash: "temp",
+                size: 0,
+                referenceCount: 0 // Temporary, will be updated once chunk is processed
+            });
+            await tempChunk.save();
+            tempChunkIds.push(tempChunk._id);
+        }
+
+        // Save the document with the temporary chunk references
+        const newDocument = new Document({
+            title: documentTitle,
+            author: author,
+            versions: [{
+                versionNumber: '1.0',
+                tempChunks: tempChunkIds,
+                isDraft: true,
+                changedBy: author
+            }],
+            currentVersion: '1.0',
+        });
+        await newDocument.save();
+
+        res.json({
+            message: "Signed URLs generated successfully",
+            signedUrls,
+            documentId: newDocument._id
+        });
+    } catch (error) {
+        console.error("Error processing request:", error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 
 module.exports = { uploadDocument, getDocument }
