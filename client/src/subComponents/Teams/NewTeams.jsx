@@ -59,6 +59,7 @@ export function NewTeam() {
                     onChange={handleNameChange}
                     variant="outlined"
                     sx={{ mb: 2 }}
+                    required
                 />
                 <Stack spacing={3} sx={{ width: 500, marginBottom: 5 }}>
                     <Autocomplete
