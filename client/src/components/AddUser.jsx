@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import './AddUser.css'
+import './AddUser.css'; // Import the CSS file for styling
+
 const AddUser = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
+        dateOfBirth: '',
+        email: '',
     });
 
     const [errors, setErrors] = useState({});
@@ -19,7 +22,7 @@ const AddUser = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
+        // Form validation
         const newErrors = {};
         if (!formData.firstName.trim()) {
             newErrors.firstName = 'First name is required';
@@ -27,16 +30,24 @@ const AddUser = () => {
         if (!formData.lastName.trim()) {
             newErrors.lastName = 'Last name is required';
         }
+        if (!formData.dateOfBirth.trim()) {
+            newErrors.dateOfBirth = 'Date of birth is required';
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'Email is invalid';
+        }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-
+        // Call API endpoint to update/add user data
         try {
             const response = await fetch('/api/user', {
-                method: 'POST',
+                method: 'POST', // or PUT/PATCH for updating
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -53,7 +64,7 @@ const AddUser = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
+        <form className="form-container" onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="firstName">First Name:</label>
                 <input
@@ -63,7 +74,7 @@ const AddUser = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                 />
-                {errors.firstName && <span>{errors.firstName}</span>}
+                {errors.firstName && <span className="error">{errors.firstName}</span>}
             </div>
             <div>
                 <label htmlFor="lastName">Last Name:</label>
@@ -74,9 +85,30 @@ const AddUser = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                 />
-                {errors.lastName && <span>{errors.lastName}</span>}
+                {errors.lastName && <span className="error">{errors.lastName}</span>}
             </div>
-
+            <div>
+                <label htmlFor="dateOfBirth">Date of Birth:</label>
+                <input
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                />
+                {errors.dateOfBirth && <span className="error">{errors.dateOfBirth}</span>}
+            </div>
+            <div>
+                <label htmlFor="email">Email:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                />
+                {errors.email && <span className="error">{errors.email}</span>}
+            </div>
             <button type="submit">Submit</button>
         </form>
     );
