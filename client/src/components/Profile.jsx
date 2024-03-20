@@ -46,7 +46,7 @@ function Profile() {
 					docName: 'Shared doc with Jay'
 				},
 				{
-					dosName: 'Shared doc with Swapnil'
+					docName: 'Shared doc with Swapnil'
 				}
 			]
 		};
@@ -88,11 +88,11 @@ function Profile() {
 						</AccordionSummary>
 						<AccordionDetails>
 							<List>
-								<ListItem disablePadding>
+								{userInfo?.sharedDocs?.map((doc, i) => (<ListItem key={i} disablePadding>
 									<ListItemButton>
-									<ListItemText primary="Trash" />
+									<ListItemText primary={doc.docName} />
 									</ListItemButton>
-								</ListItem>
+								</ListItem>))}
 							</List>
 						</AccordionDetails>
 					</Accordion>
