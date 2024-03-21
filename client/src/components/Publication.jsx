@@ -1,49 +1,29 @@
 import { useState, useEffect } from "react";
-import { CardContent, Grid, Typography, Card } from "@mui/material";
+import documents from '../assets/data/documents.json';
+import { CardContent, TextField, Switch, DialogActions, Button, DialogTitle, DialogContentText, DialogContent, Grid, Typography, Card, CircularProgress, Paper, Dialog, FormGroup, FormControlLabel } from "@mui/material";
+import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
 import { useParams } from "react-router";
+import Publication1 from "../assets/files/Publication1.pdf"
+import Publication2 from "../assets/files/Publication2.pdf"
+import Publication3 from "../assets/files/Publication3.pdf"
+import Publication4 from "../assets/files/Publication4.pdf"
 import axios from "axios";
 
+const files = {
+    "GL Guess": Publication1,
+    "I Charge, Therefore I Drive: Current State of Electric Vehicle Charging Systems": Publication2,
+    "Underwater vehicles: A review of the current state of the art and future directions": Publication3,
+    "Publication4": Publication4
+};
+
+
 export default function Publication() {
-
-    let { pubId } = useParams();
-    console.log(pubId);
-    const [publication, setPublication] = useState([]);
-
-    useEffect(() => {
-        axios.get(`http://localhost:3000/docs/fetchAll/`, {
-            method: "GET"
-        }).then((res) => {
-            setPublication(res.data.documents);
-        });
-    }, []);
+    
 
     return (
-        <div>
-            <Grid container>
-                <Grid item lg={4} md={12} sm={12}>
-                    <PublicationCard publication={publication} />
-                </Grid>
-            </Grid>
-        </div>
+        <>
+            
+        </>
     )
 }
 
-function PublicationCard({ publication }) {
-    const { title, ownerUsername } = publication;
-    return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
-                <Card sx={{ width: 345 }}>
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                            {title}
-                        </Typography>
-                        <Typography variant="body2">
-                            {ownerUsername}
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
-    )
-}
