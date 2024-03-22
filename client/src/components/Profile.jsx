@@ -59,7 +59,16 @@ function Profile() {
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
 				<Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-					Hello
+
+					<List>
+						<ListItem disablePadding>
+							<ListItemButton>
+							<ListItemText primary={'Name: ' + userInfo.name} />
+							</ListItemButton>
+						</ListItem>
+
+					</List>
+
 					<Accordion>
 						<AccordionSummary
 						expandIcon={<ExpandMoreIcon />}
