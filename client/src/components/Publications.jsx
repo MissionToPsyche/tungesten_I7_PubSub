@@ -1,31 +1,23 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { Typography, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
+import { Typography, CardMedia, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
+import documents from '../assets/data/documents.json';
 import axios from "axios";
-import Publication1 from "../assets/files/Publication1.pdf"
-import Publication2 from "../assets/files/Publication2.pdf"
-import Publication3 from "../assets/files/Publication3.pdf"
-import Publication4 from "../assets/files/Publication4.pdf"
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+// import Publication1 from "../assets/files/Publication1.pdf"
+// import Publication2 from "../assets/files/Publication2.pdf"
+// import Publication3 from "../assets/files/Publication3.pdf"
+// import Publication4 from "../assets/files/Publication4.pdf"
 import { useNavigate } from 'react-router-dom';
-import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import Switch from '@mui/material/Switch';
-
-const files = {
-    "Exploring the depths": Publication1,
-    "Publication2": Publication2,
-    "Publication3": Publication3,
-    "Publication4": Publication4
-};
+import docThumb from '../assets/images/docThumb.png';
+// const files = {
+//     "Exploring the depths": Publication1,
+//     "Publication2": Publication2,
+//     "Publication3": Publication3,
+//     "Publication4": Publication4
+// };
 
 
 export default function Publications() {
@@ -54,35 +46,80 @@ export default function Publications() {
 
     const init = async () => {
         setIsLoading(true);
+        // try {
+        //     const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         }
+        //     });
+        //     setPublications(res.data);
+        //     // console.log(res.data);
+        // } catch (error) {
+        //     console.error('Error fetching documents:', error); // Log any errors
+        // }
         try {
-            const res = await axios.get("http://localhost:3000/docs/fetchAll", {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            setPublications(res.data);
-            // console.log(res.data);
+            // Get the documents string from localStorage
+            const documentsString = localStorage.getItem('documents');
+
+            // Check if the documents string is not null
+            if (documentsString) {
+                // Convert the documents string back into an object
+                const documents = JSON.parse(documentsString);
+                setPublications(documents);
+            } else {
+                throw new Error('No documents found in localStorage');
+            }
         } catch (error) {
             console.error('Error fetching documents:', error); // Log any errors
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
-    const searchDocs = async () => {
+    // const searchDocs = async () => {
+    //     setIsLoading(true);
+    //     if (searchTerm) {
+    //         try {
+    //             let res;
+    //             if (Object.values(filters).some(filter => filter)) {
+    //                 const { author, abstract, year } = filters;
+    //                 console.log(author, abstract, year);
+    //                 res = await axios.get(`http://localhost:3000/search/byFilters?author=${author}&abstract=${abstract}&year=${year}`);
+    //                 console.log("filters:", res);
+    //             } else {
+    //                 res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`);
+    //                 console.log("title", res);
+    //             }
+    //             setSearchResults(res.data);
+    //         } catch (error) {
+    //             console.error('Error searching documents:', error);
+    //         }
+    //     } else {
+    //         setSearchResults([]);
+    //     }
+    //     setIsLoading(false);
+    // };
+    const searchDocs = () => {
         setIsLoading(true);
         if (searchTerm) {
             try {
                 let res;
+                const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
                 if (Object.values(filters).some(filter => filter)) {
                     const { author, abstract, year } = filters;
-                    console.log(author, abstract, year);
-                    res = await axios.get(`http://localhost:3000/search/byFilters?author=${author}&abstract=${abstract}&year=${year}`);
+                    const lowerCaseAuthor = author.toLowerCase().trim();
+                    const lowerCaseAbstract = abstract.toLowerCase().trim();
+                    res = documents.filter(doc =>
+                        (author ? doc.user.username.toLowerCase().trim().includes(lowerCaseAuthor) : true) &&
+                        (abstract ? doc.abstract.toLowerCase().trim().includes(lowerCaseAbstract) : true) &&
+                        (year ? doc.yearPublished === year : true)
+                    );
                     console.log("filters:", res);
                 } else {
-                    res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`);
+                    res = documents.filter(doc => doc.title.toLowerCase().trim().includes(lowerCaseSearchTerm));
                     console.log("title", res);
                 }
-                setSearchResults(res.data);
+                setSearchResults(res);
             } catch (error) {
                 console.error('Error searching documents:', error);
             }
@@ -162,7 +199,7 @@ export default function Publications() {
                         ) : (
                             // console.log(searchResults),
                             searchResults.map((publication) => (
-                                <Publication publication={publication} key={publication._id} />
+                                <Publication publication={publication} key={publication.id} />
                             ))
                         )
                     ) : (
@@ -190,119 +227,36 @@ export default function Publications() {
 }
 
 function Publication({ publication }) {
-    var { title, content, comments, adminAccess } = publication;
+    var { id, title, content, comments, adminAccess } = publication;
     const navigate = useNavigate();
-    var [isCommentOpen, setIsCommentOpen] = useState(false);
-    const openCommentBox = () => setIsCommentOpen(true);
-    const closeCommentBox = (event, action) => {
-        if (action === 'submit') {
-            event.preventDefault();
-            let formData = new FormData(event.currentTarget);
-            let formJson = Object.fromEntries(formData.entries());
-            let newComment = formJson.newComment;
-            console.log(newComment);
-            if (newComment) {
-                comments.push(newComment);
-                // api call for sending the comment to backend.
-            }
-        }
-        setIsCommentOpen(false);
-    }
 
-    const setAdminAccess = (event) => {
-        // event.preventDefault();
-        // console.log('clicked', event.target.checked)
-        adminAccess = !adminAccess;
+    const handleOpenDoc = () => {
+        navigate(`/document/${id}`);
     }
 
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: "center", marginTop: 80 }}>
-                <Card sx={{ width: 600 }}>
+                <Card sx={{
+                    width: 600, cursor: 'pointer',
+                    '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    }
+                }} onClick={handleOpenDoc}>
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={docThumb}
+                        alt="Document thumbnail"
+                    />
                     <CardContent>
                         <Typography variant="h5" component="div">
                             {title}
                         </Typography>
-                        <PreviewFile title={title} />
-                        <Typography Typography variant="body2" >
-                            {content}
-                        </Typography>
-                        <div>
-                            <RemoveRedEyeIcon onClick={() => navigate('/viewPDF')}></RemoveRedEyeIcon>
-                            <InsertCommentOutlinedIcon onClick={openCommentBox}></InsertCommentOutlinedIcon>
-                            <FormGroup>
-                                <FormControlLabel
-                                    control={
-                                        <Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
-                                    }
-                                    label="Private"
-                                />
-                            </FormGroup>
-                            <Dialog
-                                open={isCommentOpen}
-                                onClose={closeCommentBox}
-                                PaperProps={{
-                                    comments: comments,
-                                    component: 'form',
-                                    onSubmit: (event) => closeCommentBox(event, 'submit')
-                                }}
-                            >
-                                <DialogTitle>Comments</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                            Comments for document : {title}
-                                        </Typography>
-                                        {comments && comments.map((comment) => comment && (
-                                            <Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
-                                                {comment}
-                                            </Typography>
-                                        ))}
 
-                                    </DialogContentText>
-                                    <TextField
-                                        margin="dense"
-                                        id="newComment"
-                                        name="newComment"
-                                        label="Comment"
-                                        fullWidth
-                                        variant="standard"
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={closeCommentBox}>Close</Button>
-                                    <Button type="submit">Submit</Button>
-                                </DialogActions>
-                            </Dialog>
-
-                        </div>
                     </CardContent>
                 </Card>
             </div>
         </div >
-    )
-}
-
-
-
-function PreviewFile({ title }) {
-    // TODO: Add logic to preview different file types from backend
-
-    const [isLoading, setIsLoading] = useState(true);
-    const file = files[title];
-
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            {isLoading && <CircularProgress />}
-            <iframe
-                src={file}
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                onLoad={() => setIsLoading(false)}
-                style={{ display: isLoading ? 'none' : 'block' }}
-            >
-            </iframe>
-        </div>
     )
 }
