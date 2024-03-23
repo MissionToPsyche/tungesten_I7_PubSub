@@ -7,6 +7,32 @@ const DEFAULT_SEARCH_LIMIT = 10;
 const MAX_SEARCH_LIMIT = 50;
 const allowedSortFields = ['username', 'name', 'email', 'createdAt'];
 
+async function fetchTeamDetails(teamIds) {
+    const teams = await Team.find({ '_id': { $in: teamIds } }).lean();
+    return teams.map(team => ({
+        teamId: team._id.toString(),
+        teamName: team.name,
+        members: team.members.map(member => member.toString())
+    }));
+}
+
+async function createUserLoginEventLog(req, user) {
+    const teamsDetails = await fetchTeamDetails(user.teams);
+
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        userId: user._id.toString(),
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        teams: teamsDetails
+    };
+
+    await publishLog('user-service-logs', 'UserLoggedIn.avsc', logEntry);
+}
+
 async function userLogin(req, res) {
     try {
         const { username, password } = req.body;
@@ -32,6 +58,7 @@ async function userLogin(req, res) {
             role: user.role,
             profile: user.profilePictureUrl || `${process.env.AWS_PROFILE_PICTURE_S3_URL}default-profile.png`
         };
+        await createUserLoginEventLog(req, user);
         res.json(userDetails);
     } catch (error) {
         res.status(500).json({ message: error.message });
