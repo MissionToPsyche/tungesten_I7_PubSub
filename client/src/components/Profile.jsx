@@ -66,7 +66,21 @@ function Profile() {
 							<ListItemText primary={'Name: ' + userInfo.name} />
 							</ListItemButton>
 						</ListItem>
-
+						<ListItem disablePadding>
+							<ListItemButton>
+							<ListItemText primary={"Email: " + userInfo.email} />
+							</ListItemButton>
+						</ListItem>
+						<ListItem disablePadding>
+							<ListItemButton>
+							<ListItemText primary={"Date Of Birth: " + userInfo.dob} />
+							</ListItemButton>
+						</ListItem>
+						<ListItem disablePadding>
+							<ListItemButton>
+							<ListItemText primary={"Total number of docs: " + userInfo.totalDocContribution} />
+							</ListItemButton>
+						</ListItem>
 					</List>
 
 					<Accordion>
