@@ -9,10 +9,11 @@ import Publications from './components/Publications';
 import UploadDoc from './components/UploadDoc';
 import Publication from './components/Publication';
 import ViewPDF from './components/viewPDF';
-import UpdateUser from './components/UpdateUser';
 import AuthProvider from './providers/AuthProvider';
 import RoutesComp from './routes/RoutesComp';
 import DocumentPermissionForm from './components/DocumentPermissionForm';
+import UserUpdate from './components/UserUpdate'
+import UpdateUser from './components/UpdateUser';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/uploaddoc/" element={<UploadDoc />} />
           <Route path="/ViewPDF/" element={<ViewPDF />} />
           <Route path="/DocumentPermissionForm" element={<DocumentPermissionForm />} />
+          <Route path="/userUpdate" element={<UserUpdate />} />
         </Routes>
       </Router>
     </div>
