@@ -18,12 +18,69 @@ const files = {
 
 
 export default function Publication() {
-    
+    const { id } = useParams();
+    const [publication, setPublication] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+
+
+
+    // const init = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //         const res = await axios.get(`http://localhost:3000/docs/documents/${id}`, {
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             }
+    //         });
+    //         setPublication(res.data);
+    //     } catch (error) {
+    //         console.error('Error fetching document:', error); // Log any errors
+    //     }
+    //     setIsLoading(false);
+    // }
+    const init = () => {
+        setIsLoading(true);
+        try {
+            const docId = Number(id);
+            const doc = documents.find(document => document.id === docId);
+            console.log(documents);
+            if (doc) {
+                setPublication(doc);
+            } else {
+                console.error('Document not found');
+            }
+        } catch (error) {
+            console.error('Error fetching document:', error); // Log any errors
+        }
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <>
-            
+            <EditTopper title={publication.title} />
+            <Grid container>
+                <Grid item lg={8} md={12} sm={12}>
+                    <DocCard publication={publication} />
+                </Grid>
+                <Grid item lg={4} md={12} sm={12}>
+                    <CommentDoc publication={publication} />
+                </Grid>
+            </Grid>
+            <div style={{ margin: '50px 50px' }}>
+                <Paper elevation={3} style={{ padding: '20px', margin: '50px 0', minHeight: '500px' }}>
+                    <Typography variant="h5" component="div">
+                        <PreviewFile title={publication.title} />
+                    </Typography>
+                </Paper>
+            </div>
         </>
     )
 }
-
