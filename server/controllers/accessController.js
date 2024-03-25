@@ -26,8 +26,29 @@ const grantAccess = async () => {
     }
 }
 
-const revokeAccess = () => {
+const revokeAccess = async () => {
+    try {
+        const document = await Document.findById(req.params.documentId);
+        const user = await User.findById(req.params.userId);
+        if (!document || !user) {
+            return res.status(404).json({ message: "Document or User not found." });
+        }
 
+        // Check if the user has access
+        const accessIndex = document.accessControls.findIndex(access => access.entity.toString() === user._id.toString());
+        if (accessIndex === -1) {
+            return res.status(400).json({ message: "User does not have access to this document." });
+        }
+
+        // Remove user's access to the document
+        document.accessControls.splice(accessIndex, 1);
+        await document.save();
+
+        res.status(200).json({ message: "Access revoked successfully." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 const updateAccess = async () => {
