@@ -84,3 +84,31 @@ export default function Publication() {
         </>
     )
 }
+
+function EditTopper({ title }) {
+
+    return (
+        <div style={{ height: 250, background: "#04068d", top: 0, width: "100vw", zIndex: 0, marginBottom: -250 }}>
+            <div style={{ height: 250, display: "flex", justifyContent: "center", flexDirection: "column" }}>
+                <div>
+                    <Typography style={{ color: "white", fontWeight: 600 }} variant="h3" textAlign={"center"}>{title}</Typography>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function DocCard({ publication }) {
+    var { title, abstract, comments, author } = publication;
+    return (
+        <div style={{ display: 'flex', justifyContent: "center", marginTop: 200 }}>
+            <Card sx={{ width: '100%', marginLeft: 20 }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div"> {title} </Typography>
+                    <Typography variant="body2" color="text.secondary"> {abstract} </Typography>
+                    <Typography variant="body2" color="text.secondary"> Author: {author} </Typography>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
