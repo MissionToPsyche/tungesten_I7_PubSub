@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Typography, Tabs, Tab, Box, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+
     const [value, setValue] = useState(0);
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -69,7 +72,7 @@ function NewUser() {
 
     return (
         <>
-            <Typography sx={{ marginLeft: "38%" , marginBottom: 3 }} variant="h5">Enter Details for New User</Typography>
+            <Typography sx={{ marginLeft: "38%", marginBottom: 3 }} variant="h5">Enter Details for New User</Typography>
             <form style={{ display: "flex", flexDirection: "column", alignItems: "center" }} onSubmit={handleSubmit}>
                 <TextField
                     label="Name"
@@ -92,6 +95,7 @@ function NewUser() {
 }
 
 function ManageUsers() {
+    const navigate = useNavigate();
     const users = [
         { id: 1, name: 'User 1', email: 'user1@gmail.com' },
         { id: 2, name: 'User 2', email: 'user2@gmail.com' },
@@ -104,6 +108,7 @@ function ManageUsers() {
     };
 
     return (
+
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -117,7 +122,7 @@ function ManageUsers() {
                     {users.map((user) => (
                         <TableRow key={user.id}>
                             <TableCell component="th" scope="row">
-                                {user.name}
+                                <button onClick={() => navigate('/userUpdate')}>{user.name}</button>
                             </TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell align="right">
