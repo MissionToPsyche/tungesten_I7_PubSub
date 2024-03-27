@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "TeamDeleted",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "string",
+      "doc": "The ISO 8601 timestamp when the team was deleted."
+    },
+    {
+      "name": "teamName",
+      "type": "string",
+      "doc": "The name of the team that was deleted."
+    },
+    {
+      "name": "actionPerformedBy",
+      "type": "string",
+      "doc": "The identifier of the admin who deleted the team."
+    }
+  ],
+  "doc": "A record of a team deletion event."
+}

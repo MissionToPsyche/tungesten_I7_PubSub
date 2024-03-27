@@ -1,0 +1,38 @@
+{
+  "type": "record",
+  "name": "TeamUpdated",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "string",
+      "doc": "The ISO 8601 timestamp when the team update occurred."
+    },
+    {
+      "name": "teamName",
+      "type": "string",
+      "doc": "The original name of the team being updated."
+    },
+    {
+      "name": "newTeamName",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "The new name of the team, if it has been changed."
+    },
+    {
+      "name": "membersUsernames",
+      "type": ["null", {
+        "type": "array",
+        "items": "string"
+      }],
+      "default": null,
+      "doc": "The updated list of usernames who are members of the team."
+    },
+    {
+      "name": "actionPerformedBy",
+      "type": "string",
+      "doc": "The identifier of the admin who updated the team."
+    }
+  ],
+  "doc": "A record of a team update event."
+}
