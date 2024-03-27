@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "name": "UserDeleted",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "string",
+      "doc": "The ISO 8601 timestamp when the user was deleted."
+    },
+    {
+      "name": "userId",
+      "type": "string",
+      "doc": "The unique identifier of the deleted user."
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "doc": "The username of the deleted user."
+    },
+    {
+      "name": "actionPerformedBy",
+      "type": "string",
+      "doc": "The identifier of the admin who deleted the user."
+    }
+  ],
+  "doc": "A record of a user deletion event."
+}

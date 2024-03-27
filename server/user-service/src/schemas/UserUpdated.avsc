@@ -1,0 +1,65 @@
+{
+  "type": "record",
+  "name": "UserUpdated",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "string",
+      "doc": "The ISO 8601 timestamp when the user update occurred."
+    },
+    {
+      "name": "userId",
+      "type": "string",
+      "doc": "The unique identifier for the updated user."
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "doc": "The username of the updated user."
+    },
+    {
+      "name": "updatedFields",
+      "type": {
+        "type": "record",
+        "name": "UpdatedUserFields",
+        "fields": [
+          {
+            "name": "name",
+            "type": ["null", "string"],
+            "default": null,
+            "doc": "The updated name of the user."
+          },
+          {
+            "name": "email",
+            "type": ["null", "string"],
+            "default": null,
+            "doc": "The updated email address of the user."
+          },
+          {
+            "name": "role",
+            "type": ["null", "string"],
+            "default": null,
+            "doc": "The updated role of the user."
+          },
+          {
+            "name": "teams",
+            "type": ["null", {
+              "type": "array",
+              "items": "string"
+            }],
+            "default": null,
+            "doc": "The updated list of team names the user is a part of."
+          }
+        ]
+      },
+      "doc": "A record of fields updated for the user."
+    },
+    {
+      "name": "actionPerformedBy",
+      "type": "string",
+      "doc": "The identifier of the admin who updated the user."
+    }
+  ],
+  "doc": "A record of a user update event."
+}

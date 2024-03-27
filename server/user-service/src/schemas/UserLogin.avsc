@@ -1,0 +1,74 @@
+{
+  "type": "record",
+  "name": "UserLoggedIn",
+  "namespace": "com.upstash",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "string",
+      "doc": "The ISO 8601 timestamp when the user logged in."
+    },
+    {
+      "name": "userId",
+      "type": "string",
+      "doc": "The unique identifier for the user."
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "doc": "The username of the user."
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "doc": "The email address of the user."
+    },
+    {
+      "name": "role",
+      "type": "string",
+      "doc": "The role of the user in the system."
+    },
+    {
+      "name": "ipAddress",
+      "type": "string",
+      "doc": "The IP address from which the user logged in."
+    },
+    {
+      "name": "userAgent",
+      "type": "string",
+      "doc": "The user agent string of the user's device."
+    },
+    {
+      "name": "teams",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "TeamInfo",
+          "fields": [
+            {
+              "name": "teamId",
+              "type": "string",
+              "doc": "The unique identifier of the team."
+            },
+            {
+              "name": "teamName",
+              "type": "string",
+              "doc": "The name of the team."
+            },
+            {
+              "name": "members",
+              "type": {
+                "type": "array",
+                "items": "string"
+              },
+              "doc": "A list of usernames of members in the team."
+            }
+          ]
+        },
+        "doc": "A list of teams that the user is a part of, along with team details."
+      }
+    }
+  ],
+  "doc": "A record of a user logging into the system, including detailed user and team information."
+}

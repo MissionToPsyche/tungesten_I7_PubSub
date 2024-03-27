@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "UserCreated",
-  "namespace": "com.example",
+  "namespace": "com.upstash",
   "fields": [
     {
       "name": "timestamp",
