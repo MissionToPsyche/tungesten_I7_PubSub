@@ -9,7 +9,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
@@ -85,9 +84,9 @@ function Profile() {
 
 					<Accordion>
 						<AccordionSummary
-						expandIcon={<ExpandMoreIcon />}
-						aria-controls="panel1-content"
-						id="panel1-header"
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls="panel1-content"
+							id="panel1-header"
 						>
 						<Typography>Owned Documents</Typography>
 						</AccordionSummary>
