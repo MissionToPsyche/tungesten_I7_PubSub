@@ -134,3 +134,80 @@ function PreviewFile({ title }) {
         </div>
     )
 }
+
+function CommentDoc({ publication }) {
+    var { _id, title, content, comments, adminAccess } = publication;
+    var [isCommentOpen, setIsCommentOpen] = useState(false);
+
+    const closeCommentBox = (event, action) => {
+        if (action === 'submit') {
+            event.preventDefault();
+            let formData = new FormData(event.currentTarget);
+            let formJson = Object.fromEntries(formData.entries());
+            let newComment = formJson.newComment;
+            console.log(newComment);
+            if (newComment) {
+                comments.push(newComment);
+                // api call for sending the comment to backend.
+            }
+        }
+        setIsCommentOpen(false);
+    }
+
+    const openCommentBox = () => setIsCommentOpen(true);
+    const setAdminAccess = (event) => {
+        // event.preventDefault();
+        // console.log('clicked', event.target.checked)
+        adminAccess = !adminAccess;
+    }
+
+    return (
+        <div style={{ display: 'flex', justifyContent: "felx-start", marginTop: 200, marginLeft: 10, cursor: 'pointer' }}>
+            <InsertCommentOutlinedIcon sx={{ color: 'white' }} fontSize="large" onClick={openCommentBox}></InsertCommentOutlinedIcon>
+            {/* <FormGroup>
+                <FormControlLabel
+                    control={
+                        <Switch value={adminAccess} onClick={setAdminAccess} name="admin" />
+                    }
+                    label="Private"
+                />
+            </FormGroup> */}
+            <Dialog
+                open={isCommentOpen}
+                onClose={closeCommentBox}
+                PaperProps={{
+                    comments: comments,
+                    component: 'form',
+                    onSubmit: (event) => closeCommentBox(event, 'submit')
+                }}
+            >
+                <DialogTitle>Comments</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Comments for document : {title}
+                        </Typography>
+                        {comments && comments.map((comment) => comment && (
+                            <Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
+                                {comment}
+                            </Typography>
+                        ))}
+
+                    </DialogContentText>
+                    <TextField
+                        margin="dense"
+                        id="newComment"
+                        name="newComment"
+                        label="Comment"
+                        fullWidth
+                        variant="standard"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeCommentBox}>Close</Button>
+                    <Button type="submit">Submit</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    )
+}
