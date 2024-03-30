@@ -1,9 +1,7 @@
 const { kafka, registry } = require('./kafkaConfig');
 const { EventEmitter } = require('events');
 
-const messageEventEmitter = new EventEmitter();
-
-async function startConsumer({ groupId, topics, eventName }) {
+async function startConsumer({ groupId, topics, eventName, isRegistryDecode = true, messageEventEmitter }) {
     const consumer = kafka.consumer({ groupId });
 
     await consumer.connect();
@@ -14,7 +12,13 @@ async function startConsumer({ groupId, topics, eventName }) {
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
             try {
-                const decodedValue = await registry.decode(message.value);
+                let decodedValue;
+                if (isRegistryDecode === true) {
+                    decodedValue = await registry.decode(message.value);
+                }
+                else {
+                    decodedValue = JSON.parse(message.value.toString());
+                }
                 messageEventEmitter.emit(eventName, decodedValue, topic, partition);
             } catch (e) {
                 console.error('Error decoding message', e);
