@@ -14,6 +14,7 @@ import RoutesComp from './routes/RoutesComp';
 import DocumentPermissionForm from './components/DocumentPermissionForm';
 import UserUpdate from './components/UserUpdate'
 import UpdateUser from './components/UpdateUser';
+import Profile from './components/Profile';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/publication/:pubId" element={<Publication />} />
           <Route path="/uploaddoc/" element={<UploadDoc />} />
           <Route path="/ViewPDF/" element={<ViewPDF />} />
+          <Route path="/profile/" element={<Profile />} />
           <Route path="/DocumentPermissionForm" element={<DocumentPermissionForm />} />
           <Route path="/userUpdate" element={<UserUpdate />} />
         </Routes>

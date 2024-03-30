@@ -7,6 +7,9 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/images/psycheLogo.png"
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 
 
 export function MuiNavbar() {
@@ -26,9 +29,14 @@ export function MuiNavbar() {
                     <Button color='inherit' onClick={() => navigate('/addUser')}>Add User</Button>
                     <Button color='inherit' onClick={() => navigate('/uploaddoc')}>My Uploads</Button>
                     <Button color='inherit' onClick={() => navigate('/dashboard')}>Dashboard</Button>
-                    <Button variant="outlined" onClick={() => navigate('/login')}>SignIn</Button>
+                    {/* <Button variant="outlined" onClick={() => navigate('/login')}>SignIn</Button> */}
+                    <Tooltip title="Open profile info">
+                        <IconButton onClick={() => navigate('/profile')} sx={{ p: 0 }}>
+                            <Avatar alt="Manan Patel" src="" />
+                        </IconButton>
+                    </Tooltip>
                 </Stack>
             </Toolbar>
         </AppBar>
     )
-} 
+}

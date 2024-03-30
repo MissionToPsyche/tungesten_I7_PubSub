@@ -22,11 +22,6 @@ function Login() {
 	var [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
 	const login = () => {
-		// console.log(userName);
-		// setUserNameErrorFlag(true);
-		// setPasswordErrorFlag(true);
-		// setUserNameErrorMessage("Username doesn't exist.");
-		// setPasswordErrorMessage("Password is wrong");
 		handleLogin();
 	};
 
