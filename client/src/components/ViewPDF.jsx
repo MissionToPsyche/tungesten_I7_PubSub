@@ -31,7 +31,7 @@ function ViewPDF() {//view pdf controller to show the contents
             console.log("please select file")
         }
     }
-
+    //here it is handling the submission of the document and have document in the editor
     const handleSubmit = (e) => {
         e.preventDefault()
         if (pdfFile !== null) {
