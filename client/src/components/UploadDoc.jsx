@@ -19,6 +19,11 @@ export default function UploadDoc() {
         setSelectedFile(event.target.files[0]);
     };
 
+    // Below code asks the different details of documents
+    // from the user such as Title, Abstract, Co-author names etc,
+    // And the data is send to the backend to be stored in database
+    //  and to be linked with all the authors.
+
     return (
         <div>
             <Typography variant="h3" sx={{ margin: '30px' }}>Upload Publication</Typography>
