@@ -4,7 +4,8 @@
         "title": "GL Guess",
         "abstract": "Cryptocurrencies are peer-to-peer-based transaction systems where the data exchanges are secured using the secure hash algorithm (SHA)-256 and message digest (MD)-5 algorithms. The prices of cryptocurrencies are highly volatile and follow stochastic moments and have reached their unpredictable limits. They are commonly used for investment and have become a substitute for other types of investment like metals, estates, and the stock market.",
         "yearPublished": 2020,
-        "file": "../files/Publication1.pdf",
+        "file": "../files/publication1.pdf",
+        "thumbnail": "../images/publication1.png",
         "user": {
             "userId": 1,
             "username": "john",
@@ -17,6 +18,7 @@
         "abstract": "I charge, therefore I drive. Is this the new paradigm? The ambitious goals set by governments worldwide to phase out gasoline-powered cars are the driving force behind the upgrade of electric vehicle (EV) charging infrastructures. The EV industry and roadways departments may be asked to invest more in wireless charging, that is, without the need for any cable. Transmitter pads that can charge the EV in the garage, or even briefly at traffic lights, may convey the stationary wireless charge, whereas coils embedded into roadways may power EVs as they drive overhead. The standardized wireless charge appears to be the optimum solution to placate the anxiety of drivers.",
         "yearPublished": 2021,
         "file": "../files/Publication2.pdf",
+        "thumbnail": "../images/publication2.png",
         "user": {
             "userId": 2,
             "username": "jane",
@@ -29,6 +31,46 @@
         "abstract": "Deep Reinforcement Learning (DRL) methods are increasingly being applied in Unmanned Underwater Vehicles (UUV) providing adaptive control responses to environmental disturbances. However, in physical platforms, these methods are hindered by their inherent data inefficiency and performance degradation when subjected to unforeseen process variations.",
         "yearPublished": 2022,
         "file": "../files/Publication3.pdf",
+        "thumbnail": "../images/publication3.png",
+        "user": {
+            "userId": 3,
+            "username": "doe",
+            "role": "user"
+        }
+    },
+    {
+        "id": 4,
+        "title": "AI in Healthcare: Current Applications and Future Directions",
+        "abstract": "Artificial Intelligence (AI) is revolutionizing the healthcare industry by providing innovative solutions for diagnosing and treating a variety of medical conditions. This paper explores the current applications of AI in healthcare and discusses potential future directions.",
+        "yearPublished": 2022,
+        "file": "../files/Publication4.pdf",
+        "thumbnail": "../images/publication4.png",
+        "user": {
+            "userId": 1,
+            "username": "john",
+            "role": "admin"
+        }
+    },
+    {
+        "id": 5,
+        "title": "Blockchain Technology: A Comprehensive Overview",
+        "abstract": "Blockchain technology has emerged as a disruptive force in the digital world, with potential applications in a variety of industries. This paper provides a comprehensive overview of blockchain technology, including its structure, functionality, and potential applications.",
+        "yearPublished": 2021,
+        "file": "../files/Publication5.pdf",
+        "thumbnail": "../images/publication5.png",
+        "user": {
+            "userId": 2,
+            "username": "jane",
+            "role": "user"
+        }
+    },
+    {
+        "id": 6,
+        "title": "Cybersecurity in the Age of IoT",
+        "abstract": "The Internet of Things (IoT) has brought about a new era of connectivity, but it has also introduced new security vulnerabilities. This paper explores the challenges of cybersecurity in the age of IoT and proposes potential solutions.",
+        "yearPublished": 2022,
+        "file": "../files/Publication6.pdf",
+        "thumbnail": "../images/publication6.png",
         "user": {
             "userId": 3,
             "username": "doe",
