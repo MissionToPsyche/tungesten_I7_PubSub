@@ -23,6 +23,10 @@ function Profile() {
 	}, []);
 
 	const setTempUserInfo = () => {
+		/* Below information is hard coded for now
+		*  it will be removed in future commits when
+		*  the backend is integrated with frontend.
+		*/
 		let info = {
 			name: 'Manan Patel',
 			picSvg: '',
