@@ -1,77 +1,61 @@
 import { useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAuth } from "../providers/AuthProvider";
+// import allUsers from '../assets/data/users.json';
+import { Typography, Card, TextField, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
 function Login() {
-	const defaultTheme = createTheme();
-	const [userName, setUserName] = useState('');
-	const [password, setPassword] = useState('');
-	const [showUserNameError, setUserNameErrorFlag] = useState(false);
-	var [showPasswordError, setPasswordErrorFlag] = useState(false);
-	var [userNameErrorMessage, setUserNameErrorMessage] = useState('');
-	var [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
 
-	const login = () => {
-		// console.log(userName);
-		// setUserNameErrorFlag(true);
-		// setPasswordErrorFlag(true);
-		// setUserNameErrorMessage("Username doesn't exist.");
-		// setPasswordErrorMessage("Password is wrong");
-		handleLogin();
-	};
+	// const admins = allUsers.filter(user => user.role === 'admin');
+	// const users = allUsers.filter(user => user.role === 'user');
 
-	const userNameChanged = (event) => {
-		setUserName(event.target.value);
-		setUserNameErrorFlag(false);
-		setUserNameErrorMessage("");
-	};
-
-	const passwordChanged = (event) => {
-		setPassword(event.target.value);
-		setPasswordErrorFlag(false);
-		setPasswordErrorMessage("");
-	}
-
-	const { setToken } = useAuth();
 	const navigate = useNavigate();
 
-	const handleLogin = () => {
-		setToken("this is a test token");
-		navigate("/", { replace: true });
-	};
+	const handleLogin = async () => {
+		const res = await axios.post(`http://localhost:3000/auth/login`, {
+			username,
+			password
+		}, {
+			headers: {
+				"Content-type": "application/json"
+			}
+		})
+		let data = res.data;
+		localStorage.setItem("token", data.token);
+		navigate("/");
+		window.location.reload();
+	}
+	// async () => {
+	// 	const user = [...admins, ...users].find(user => user.username === username && user.password === password);
 
-	// setTimeout(() => {
-	// 	handleLogin();
-	// }, 3 * 1000);
+	// 	if (user) {
+	// 		localStorage.setItem("user", JSON.stringify(user));
+	// 		navigate("/");
+	// 	} else {
+	// 		alert("Invalid username or password");
+	// 	}
+	// };
 
-	return (
-		<ThemeProvider theme={defaultTheme}>
-			<Container component="main" maxWidth="xs">
-				<CssBaseline />
-				<Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5"> Login </Typography>
-					<Box component="form" noValidate sx={{ mt: 1 }}>
-						<TextField value={userName} margin="normal" onChange={userNameChanged} error={showUserNameError} required fullWidth id="userName" helperText={userNameErrorMessage} label="Username" name="userName" autoFocus />
-						<TextField value={password} margin="normal" onChange={passwordChanged} error={showPasswordError} required fullWidth name="password" helperText={passwordErrorMessage} label="Password" type="password" id="password" />
-						<Button fullWidth onClick={login} variant="contained" sx={{ mt: 3, mb: 2 }}> Login </Button>
-					</Box>
-				</Box>
-			</Container>
-		</ThemeProvider>
-	);
+	return (<div>
+		<center style={{ marginTop: 150 }}>
+			<Typography variant="h5">Login to your Account</Typography>
+			<br />
+			<Card variant="outlined" style={{ width: 400, padding: 20 }}>
+				<div>
+					<TextField fullWidth={true} variant="outlined" label="Username" type={"text"} onChange={e => setUsername(e.target.value)} />
+					<br />
+					<br />
+					<TextField fullWidth={true} variant="outlined" label="Password" type={"password"} onChange={e => setPassword(e.target.value)} />
+					<br /> <br />
+					<Button variant="contained" onClick={handleLogin}>Sign In</Button>
+				</div>
+			</Card>
+		</center>
+	</div>);
 }
 
 export default Login;
+
