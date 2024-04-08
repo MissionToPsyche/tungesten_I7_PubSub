@@ -6,7 +6,7 @@ import AddUser from "../components/AddUser";
 import UpdateUser from "../components/UpdateUser";
 import Dashboard from "../components/Dashboard";
 import Publications from "../components/Publications";
-import UploadDoc from "../components/UploadDoc";
+import { UploadDoc } from "../components/UploadDoc";
 import { Mainpage } from "../components/Mainpage";
 
 const RoutesComp = () => {
