@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Typography, CardMedia, Box, Grid, Card, CardContent, CircularProgress, Pagination } from "@mui/material";
-import documents from '../assets/data/documents.json';
+// import documents from '../assets/data/documents.json';
 import axios from "axios";
-// import Publication1 from "../assets/files/Publication1.pdf"
-// import Publication2 from "../assets/files/Publication2.pdf"
-// import Publication3 from "../assets/files/Publication3.pdf"
-// import Publication4 from "../assets/files/Publication4.pdf"
+import Publication1 from "../assets/images/publication1.png"
+// import Publication2 from "../assets/images/publication2.png"
+// import Publication3 from "../assets/images/publication3.png"
+// import Publication4 from "../assets/images/publication4.png"
+// import Publication5 from "../assets/images/publication5.png"
+import Publication6 from "../assets/images/publication6.png"
 import { useNavigate } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
@@ -18,7 +20,14 @@ import docThumb from '../assets/images/docThumb.png';
 //     "Publication3": Publication3,
 //     "Publication4": Publication4
 // };
-
+// const imageMap = {
+//     "publication1": Publication1,
+//     "publication2": Publication2,
+//     "publication3": Publication3,
+//     "publication4": Publication4,
+//     "publication5": Publication5,
+//     "publication6": Publication6
+// };
 
 export default function Publications() {
 
@@ -46,80 +55,52 @@ export default function Publications() {
 
     const init = async () => {
         setIsLoading(true);
-        // try {
-        //     const res = await axios.get("http://localhost:3000/docs/fetchAll", {
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         }
-        //     });
-        //     setPublications(res.data);
-        //     // console.log(res.data);
-        // } catch (error) {
-        //     console.error('Error fetching documents:', error); // Log any errors
-        // }
         try {
-            // Get the documents string from localStorage
-            const documentsString = localStorage.getItem('documents');
-
-            // Check if the documents string is not null
-            if (documentsString) {
-                // Convert the documents string back into an object
-                const documents = JSON.parse(documentsString);
-                setPublications(documents);
-            } else {
-                throw new Error('No documents found in localStorage');
-            }
+            const res = await axios.get("http://localhost:3000/docs/fetchAll", {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            setPublications(res.data);
+            // console.log(res.data);
         } catch (error) {
             console.error('Error fetching documents:', error); // Log any errors
-        } finally {
+        }
+        // try {
+        //     // Get the documents string from localStorage
+        //     const documentsString = localStorage.getItem('documents');
+
+        //     // Check if the documents string is not null
+        //     if (documentsString) {
+        //         // Convert the documents string back into an object
+        //         const documents = JSON.parse(documentsString);
+        //         setPublications(documents);
+        //     } else {
+        //         throw new Error('No documents found in localStorage');
+        //     }
+        // } catch (error) {
+        //     console.error('Error fetching documents:', error); // Log any errors
+        // } 
+        finally {
             setIsLoading(false);
         }
     }
 
-    // const searchDocs = async () => {
-    //     setIsLoading(true);
-    //     if (searchTerm) {
-    //         try {
-    //             let res;
-    //             if (Object.values(filters).some(filter => filter)) {
-    //                 const { author, abstract, year } = filters;
-    //                 console.log(author, abstract, year);
-    //                 res = await axios.get(`http://localhost:3000/search/byFilters?author=${author}&abstract=${abstract}&year=${year}`);
-    //                 console.log("filters:", res);
-    //             } else {
-    //                 res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`);
-    //                 console.log("title", res);
-    //             }
-    //             setSearchResults(res.data);
-    //         } catch (error) {
-    //             console.error('Error searching documents:', error);
-    //         }
-    //     } else {
-    //         setSearchResults([]);
-    //     }
-    //     setIsLoading(false);
-    // };
-    const searchDocs = () => {
+    const searchDocs = async () => {
         setIsLoading(true);
         if (searchTerm) {
             try {
                 let res;
-                const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
                 if (Object.values(filters).some(filter => filter)) {
                     const { author, abstract, year } = filters;
-                    const lowerCaseAuthor = author.toLowerCase().trim();
-                    const lowerCaseAbstract = abstract.toLowerCase().trim();
-                    res = documents.filter(doc =>
-                        (author ? doc.user.username.toLowerCase().trim().includes(lowerCaseAuthor) : true) &&
-                        (abstract ? doc.abstract.toLowerCase().trim().includes(lowerCaseAbstract) : true) &&
-                        (year ? doc.yearPublished === year : true)
-                    );
+                    console.log(author, abstract, year);
+                    res = await axios.get(`http://localhost:3000/search/byFilters?author=${author}&abstract=${abstract}&year=${year}`);
                     console.log("filters:", res);
                 } else {
-                    res = documents.filter(doc => doc.title.toLowerCase().trim().includes(lowerCaseSearchTerm));
+                    res = await axios.get(`http://localhost:3000/search/byTitle?substring=${searchTerm}`);
                     console.log("title", res);
                 }
-                setSearchResults(res);
+                setSearchResults(res.data);
             } catch (error) {
                 console.error('Error searching documents:', error);
             }
@@ -128,6 +109,35 @@ export default function Publications() {
         }
         setIsLoading(false);
     };
+    // const searchDocs = () => {
+    //     setIsLoading(true);
+    //     if (searchTerm) {
+    //         try {
+    //             let res;
+    //             const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
+    //             if (Object.values(filters).some(filter => filter)) {
+    //                 const { author, abstract, year } = filters;
+    //                 const lowerCaseAuthor = author.toLowerCase().trim();
+    //                 const lowerCaseAbstract = abstract.toLowerCase().trim();
+    //                 res = documents.filter(doc =>
+    //                     (author ? doc.user.username.toLowerCase().trim().includes(lowerCaseAuthor) : true) &&
+    //                     (abstract ? doc.abstract.toLowerCase().trim().includes(lowerCaseAbstract) : true) &&
+    //                     (year ? doc.yearPublished === year : true)
+    //                 );
+    //                 console.log("filters:", res);
+    //             } else {
+    //                 res = documents.filter(doc => doc.title.toLowerCase().trim().includes(lowerCaseSearchTerm));
+    //                 console.log("title", res);
+    //             }
+    //             setSearchResults(res);
+    //         } catch (error) {
+    //             console.error('Error searching documents:', error);
+    //         }
+    //     } else {
+    //         setSearchResults([]);
+    //     }
+    //     setIsLoading(false);
+    // };
 
     useEffect(() => {
         if (searchTerm) {
@@ -148,6 +158,8 @@ export default function Publications() {
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
+
+
 
 
     return (
@@ -209,6 +221,7 @@ export default function Publications() {
                             <>
                                 <Grid container spacing={4} justifyContent="center">
                                     {publications.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((publication) => (
+                                        console.log(publication),
                                         publication && (
                                             <Grid item xs={12} sm={6} md={4} key={publication.title}>
                                                 <Publication publication={publication} />
@@ -226,13 +239,23 @@ export default function Publications() {
     )
 }
 
+const thumbnailMap = {
+    'research paper': Publication6,
+    'text': Publication1,
+    // Add more document types and their corresponding thumbnail images
+};
+
 function Publication({ publication }) {
-    var { id, title, content, comments, adminAccess } = publication;
+    var { _id, title, documentType, fileUrl } = publication;
     const navigate = useNavigate();
 
+    console.log(fileUrl);
+
     const handleOpenDoc = () => {
-        navigate(`/document/${id}`);
+        navigate(`/document/${_id}`);
     }
+
+    const thumbnailImage = thumbnailMap[documentType] || docThumb;
 
     return (
         <div>
@@ -246,7 +269,7 @@ function Publication({ publication }) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={docThumb}
+                        image={thumbnailImage}
                         alt="Document thumbnail"
                     />
                     <CardContent>
