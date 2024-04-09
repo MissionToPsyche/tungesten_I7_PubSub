@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './UserUpdate.css'; // Import your CSS file
-
+//user update and updating the details of the user
 const UserUpdate = ({ username }) => {
     const [user, setUser] = useState({});
     const [formData, setFormData] = useState({
@@ -45,7 +45,7 @@ const UserUpdate = ({ username }) => {
             [e.target.name]: '',
         });
     };
-
+    //handling the submit and validating the input data
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Validate form data
@@ -88,7 +88,7 @@ const UserUpdate = ({ username }) => {
             alert('Failed to update user data');
         }
     };
-
+    //form to take input and updating the details.
     return (
         <div className="update-user-container">
             <h2>Update User</h2>
