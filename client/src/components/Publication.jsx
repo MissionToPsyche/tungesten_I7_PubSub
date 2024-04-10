@@ -15,6 +15,11 @@ export default function Publication() {
         // }).then((res) => {
         //     setPublication(res.data.documents);
         // });
+        /*
+         * document list will be showed from this code.
+         * Developer testing is done in the last sprint and
+         * ready to be integrated with the backend.
+        */
         let arr = [
             {
                 title: 'document 1',
