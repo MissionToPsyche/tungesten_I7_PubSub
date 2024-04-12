@@ -32,16 +32,13 @@ function Profile() {
 			picSvg: '',
 			dob: '12/01/1999',
 			email: 'mpate133@asu.edu',
-			totalDocContribution: 5,
+			totalDocContribution: 4,
 			ownedDocs: [
 				{
 					docName: 'Owned demo doc 1',
 				},
 				{
 					docName: 'Owned demo doc 2'
-				},
-				{
-					docName: 'Owned demo doc 3'
 				}
 			],
 			sharedDocs: [
