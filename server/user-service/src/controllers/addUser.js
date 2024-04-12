@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Team = require('../models/Team');
 const { publishLog } = require("kafka");
 
-function logEntryForUserCreation(newUser, byUser) {
+function logEntryForUserCreation(newUser, req, teamDetails) {
     const logEntry = {
         timestamp: new Date().toISOString(),
         userId: newUser._id.toString(),
@@ -10,8 +10,11 @@ function logEntryForUserCreation(newUser, byUser) {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
-        teams: newUser.teams,
-        actionPerformedBy: byUser
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        teams: teamDetails,
+        actionPerformedBy: req.user.id,
+        action: 'create'
     };
     return logEntry
 }
@@ -20,6 +23,7 @@ async function addUser(req, res) {
     try {
         const { username, name, password, email, role, teamNames = [] } = req.body;
         let teamIds = [];
+        let teamDetails = []
 
         if (teamNames.length > 0) {
             const teams = await Team.find({ name: { $in: teamNames } });
@@ -27,13 +31,23 @@ async function addUser(req, res) {
                 return res.status(400).json({ message: 'One or more specified teams do not exist. Please create the teams first.' });
             }
             teamIds = teams.map(team => team._id);
+            teamDetails = teams.map(team => ({
+                teamId: team._id.toString(),
+                teamName: team.name,
+                members: team.members.map(member => member.toString())
+            }))
         }
         const newUser = new User({ username, name, password: password, email, role, teams: teamIds });
         const savedUser = await newUser.save();
-
-        // Optional: Log entry for user creation, publish to other services, or push to cache as needed
-        // const logEntry = await logEntryForUserCreation(savedUser, "admin")
-        // await publishLog("user-service-logs", "UserCreated.avsc", logEntry)
+        const logEntry = await logEntryForUserCreation(savedUser, req, teamDetails);
+        console.log(logEntry)
+        try {
+            await publishLog('user-service-logs', 'UnifiedUserSchema.avsc', logEntry);
+        }
+        catch (err) {
+            await User.findByIdAndDelete(savedUser._id);
+            throw new Error('Error publishing log entry');
+        }
 
         res.status(201).json({ message: 'User registered successfully', user: { username, name, email, role, teamNames } });
     } catch (error) {
