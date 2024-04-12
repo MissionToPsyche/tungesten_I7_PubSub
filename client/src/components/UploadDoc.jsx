@@ -4,7 +4,7 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Typography, TextField, Grid, Button } from "@mui/material"
 import CircularProgress from '@mui/material/CircularProgress';
-
+//upload the doc and have all the functionalllity
 export default function UploadDoc() {
 
     const [title, setTitle] = useState("");
@@ -18,7 +18,8 @@ export default function UploadDoc() {
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
     };
-
+    //testing the page and no errors found.
+    //all the operation related to the page
     return (
         <div>
             <Typography variant="h3" sx={{ margin: '30px' }}>Upload Publication</Typography>
