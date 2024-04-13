@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Team = require('../models/Team');
 const bcrypt = require('bcrypt');
 const { publishLog } = require("kafka");
 const { signToken } = require("auth");
@@ -9,6 +10,9 @@ const allowedSortFields = ['username', 'name', 'email', 'createdAt'];
 
 async function fetchTeamDetails(teamIds) {
     const teams = await Team.find({ '_id': { $in: teamIds } }).lean();
+    if (!teams || teams.length === 0) {
+        return [];
+    }
     return teams.map(team => ({
         teamId: team._id.toString(),
         teamName: team.name,
@@ -27,10 +31,12 @@ async function createUserLoginEventLog(req, user) {
         role: user.role,
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
-        teams: teamsDetails
+        teams: teamsDetails,
+        actionPerformedBy: user._id.toString(),
+        action: 'login'
     };
 
-    await publishLog('user-service-logs', 'UserLoggedIn.avsc', logEntry);
+    await publishLog('user-service-logs', 'UnifiedUserSchema.avsc', logEntry);
 }
 
 async function userLogin(req, res) {
@@ -149,4 +155,4 @@ async function getUserByUsername(req, res) {
     }
 };
 
-module.exports = { userLogin, searchUser, getAllUsers, getUserByUsername }
+module.exports = { userLogin, searchUser, getAllUsers, getUserByUsername, fetchTeamDetails }

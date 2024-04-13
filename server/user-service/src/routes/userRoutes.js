@@ -17,7 +17,7 @@ moduleFolders.forEach(folder => {
 });
 
 router.post('/admin/add-user', authenticate, checkUserExists, addNewUserValidator, runValidation, addUser);
-router.post('/admin/delete-user', deleteUserByAdmin);
+router.post('/admin/delete-user', authenticate, deleteUserByAdmin);
 router.post('/login', userLogin);
 router.put('/admin/update-user', updateUserByAdmin)
 router.put('/update-user', updatePofileValidator, upload.single('profilePicture'), updateUserProfile);
