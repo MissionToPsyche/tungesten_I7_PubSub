@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import documents from '../assets/data/documents.json';
+// import documents from '../assets/data/documents.json';
+import { pdfjs, Document, Page } from 'react-pdf';
 import { CardContent, TextField, Switch, DialogActions, Button, DialogTitle, DialogContentText, DialogContent, Grid, Typography, Card, CircularProgress, Paper, Dialog, FormGroup, FormControlLabel } from "@mui/material";
 import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
 import { useParams } from "react-router";
@@ -7,6 +8,7 @@ import Publication1 from "../assets/files/Publication1.pdf"
 import Publication2 from "../assets/files/Publication2.pdf"
 import Publication3 from "../assets/files/Publication3.pdf"
 import Publication4 from "../assets/files/Publication4.pdf"
+import TextEditor from "./TextEditor";
 import axios from "axios";
 
 const files = {
@@ -16,6 +18,11 @@ const files = {
     "Publication4": Publication4
 };
 
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.js',
+    import.meta.url,
+).toString();
+
 
 export default function Publication() {
     const { id } = useParams();
@@ -23,37 +30,36 @@ export default function Publication() {
     const [isLoading, setIsLoading] = useState(true);
 
 
-
-    // const init = async () => {
-    //     setIsLoading(true);
-    //     try {
-    //         const res = await axios.get(`http://localhost:3000/docs/documents/${id}`, {
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             }
-    //         });
-    //         setPublication(res.data);
-    //     } catch (error) {
-    //         console.error('Error fetching document:', error); // Log any errors
-    //     }
-    //     setIsLoading(false);
-    // }
-    const init = () => {
+    const init = async () => {
         setIsLoading(true);
         try {
-            const docId = Number(id);
-            const doc = documents.find(document => document.id === docId);
-            console.log(documents);
-            if (doc) {
-                setPublication(doc);
-            } else {
-                console.error('Document not found');
-            }
+            const res = await axios.get(`http://localhost:3000/docs/documents/${id}`, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            setPublication(res.data);
         } catch (error) {
             console.error('Error fetching document:', error); // Log any errors
         }
         setIsLoading(false);
     }
+    // const init = () => {
+    //     setIsLoading(true);
+    //     try {
+    //         const docId = Number(id);
+    //         const doc = documents.find(document => document.id === docId);
+    //         console.log(documents);
+    //         if (doc) {
+    //             setPublication(doc);
+    //         } else {
+    //             console.error('Document not found');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching document:', error); // Log any errors
+    //     }
+    //     setIsLoading(false);
+    // }
 
     useEffect(() => {
         init();
@@ -62,6 +68,7 @@ export default function Publication() {
     if (isLoading) {
         return <div>Loading...</div>
     }
+    console.log(publication.fileUrl);
 
     return (
         <>
@@ -77,7 +84,7 @@ export default function Publication() {
             <div style={{ margin: '50px 50px' }}>
                 <Paper elevation={3} style={{ padding: '20px', margin: '50px 0', minHeight: '500px' }}>
                     <Typography variant="h5" component="div">
-                        <PreviewFile title={publication.title} />
+                        <PreviewFile title={publication.title} id={publication._id} fileType={publication.fileUrl} />
                     </Typography>
                 </Paper>
             </div>
@@ -113,53 +120,92 @@ function DocCard({ publication }) {
     )
 }
 
-function PreviewFile({ title }) {
-    // TODO: Add logic to preview different file types from backend
+function PreviewFile({ title, id, fileType }) {
+    const [pdfUrl, setPdfUrl] = useState(null);
+    console.log(id);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const file = files[title];
+    useEffect(() => {
+        const fetchPdfFile = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/files/${fileType}`);
+                const data = await response.blob();
+                const url = URL.createObjectURL(data);
+                setPdfUrl(url);
+            } catch (error) {
+                console.error('Error fetching PDF file:', error);
+            }
+        };
+
+        if (fileType) {
+            fetchPdfFile();
+        } else {
+            setPdfUrl(null);
+        }
+    }, [fileType]);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            {isLoading && <CircularProgress />}
-            <iframe
-                src={file}
-                width="100%"
-                height="550px"
-                frameBorder="0"
-                onLoad={() => setIsLoading(false)}
-                style={{ display: isLoading ? 'none' : 'block' }}
-            >
-            </iframe>
+        <div style={{ padding: '50px', backgroundColor: '#dedede', marginTop: '50px' }}>
+            {pdfUrl ? (
+                <iframe
+                    src={pdfUrl}
+                    title={title}
+                    width="100%"
+                    height="600"
+                    style={{ border: 'none' }}
+                />
+            ) : (
+                <TextEditor documentId={id} />
+            )}
         </div>
-    )
+    );
 }
 
 function CommentDoc({ publication }) {
-    var { _id, title, content, comments, adminAccess } = publication;
-    var [isCommentOpen, setIsCommentOpen] = useState(false);
+    const { _id, title, comments } = publication;
+    const [isCommentOpen, setIsCommentOpen] = useState(false);
+    const [newComment, setNewComment] = useState('');
 
-    const closeCommentBox = (event, action) => {
-        if (action === 'submit') {
-            event.preventDefault();
-            let formData = new FormData(event.currentTarget);
-            let formJson = Object.fromEntries(formData.entries());
-            let newComment = formJson.newComment;
-            console.log(newComment);
-            if (newComment) {
-                comments.push(newComment);
-                // api call for sending the comment to backend.
-            }
-        }
+    const closeCommentBox = () => {
         setIsCommentOpen(false);
-    }
+        setNewComment('');
+    };
+
 
     const openCommentBox = () => setIsCommentOpen(true);
-    const setAdminAccess = (event) => {
-        // event.preventDefault();
-        // console.log('clicked', event.target.checked)
-        adminAccess = !adminAccess;
-    }
+
+    const handleCommentSubmit = async (event) => {
+        event.preventDefault();
+        if (newComment) {
+            try {
+                const user = localStorage.getItem('user');
+                console.log(user);
+                await axios.post(`http://localhost:3000/docs/documents/${_id}/comments`, {
+                    text: newComment,
+                    createdBy: user.username, // Assuming user ID is stored in localStorage
+                });
+                setNewComment('');
+                fetchComments(); // Fetch updated comments after submission
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        }
+        closeCommentBox();
+    };
+
+    const fetchComments = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/docs/documents/${_id}/comments`);
+            // Update the comments state with the fetched comments
+            publication.comments = response.data;
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchComments(); // Fetch comments when the component mounts
+    }, []);
+
 
     return (
         <div style={{ display: 'flex', justifyContent: "felx-start", marginTop: 200, marginLeft: 10, cursor: 'pointer' }}>
@@ -187,7 +233,7 @@ function CommentDoc({ publication }) {
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             Comments for document : {title}
                         </Typography>
-                        {comments && comments.map((comment) => comment && (
+                        {Array.isArray(comments) && comments.map((comment) => comment && (
                             <Typography key={comment} id="modal-modal-description" sx={{ mt: 2 }}>
                                 {comment}
                             </Typography>
@@ -201,11 +247,13 @@ function CommentDoc({ publication }) {
                         label="Comment"
                         fullWidth
                         variant="standard"
+                        value={newComment}
+                        onChange={(event) => setNewComment(event.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeCommentBox}>Close</Button>
-                    <Button type="submit">Submit</Button>
+                    <Button onClick={handleCommentSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </div>
