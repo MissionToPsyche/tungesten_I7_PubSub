@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 export function Mainpage() {
 
     const navigate = useNavigate();
-
+    //main page and testing done for this
     return (
         <>
             <h1>Admin Dashboard</h1><br></br>
