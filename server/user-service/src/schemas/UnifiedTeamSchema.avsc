@@ -1,0 +1,47 @@
+{
+    "type": "record",
+    "name": "UnifiedTeamSchema",
+    "namespace": "com.upstash",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string"
+        },
+        {
+            "name": "members",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "User",
+                    "fields": [
+                        {
+                            "name": "username",
+                            "type": "string"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "email",
+                            "type": "string"
+                        },
+                        {
+                            "name": "role",
+                            "type": {
+                                "name": "Role",
+                                "type": "enum",
+                                "symbols": [
+                                    "admin",
+                                    "researcher",
+                                    "public"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
