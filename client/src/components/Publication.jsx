@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { CardContent, Grid, Typography, Card } from "@mui/material";
 import { useParams } from "react-router";
-import axios from "axios";
 
 export default function Publication() {
 
