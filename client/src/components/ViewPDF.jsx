@@ -11,7 +11,7 @@ function ViewPDF() {//view pdf controller to show the contents
     const [pdfFile, setPDFFile] = useState(null)
     const [viewPdf, setViewPdf] = useState(null)
 
-    //testing done for this page
+    //testing done for this page no further error found
     const fileType = ['application/pdf']
     //to handle the change of the file and reading the file
     const handleChange = (e) => {

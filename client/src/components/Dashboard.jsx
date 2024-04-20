@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Typography, Tabs, Tab, Box, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-
+//testing the dashboard of the page and no errors found
 function Dashboard() {
 
     const [value, setValue] = useState(0);
@@ -52,7 +52,7 @@ function TabPanel(props) {
         </div>
     );
 }
-
+//fucntion for adding the new user
 function NewUser() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -93,7 +93,7 @@ function NewUser() {
         </>
     );
 }
-
+//managing the user database
 function ManageUsers() {
     const navigate = useNavigate();
     const users = [
