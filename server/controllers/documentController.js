@@ -1,6 +1,8 @@
 const { Document, Comment } = require("../model/documentSchema");
+const Team = require("../model/teamModel");
 
 const AWS = require("aws-sdk");
+const textDocumentSchema = require("../model/textDocumentSchema");
 const bucketName = process.env.AWS_BUCKET_NAME;
 AWS.config.update({
   accessKeyId: "",
@@ -30,12 +32,10 @@ const uploadDocumentToS3 = async (req, res) => {
     });
     await newDocument.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Document uploaded successfully",
-        document: newDocument,
-      });
+    res.status(201).json({
+      message: "Document uploaded successfully",
+      document: newDocument,
+    });
   } catch (error) {
     res
       .status(500)
@@ -66,7 +66,8 @@ const getDocumentFromS3 = async (req, res) => {
 
 const uploadDocument = async (req, res) => {
   try {
-    const { title, abstract, author } = req.body;
+    const { title, abstract, author, publicationDate } = req.body;
+    const filename = req.file.filename;
     // Validity check to see if the document title already exists
     const existingDocument = await Document.findOne({ title });
     if (existingDocument) {
@@ -78,13 +79,33 @@ const uploadDocument = async (req, res) => {
       title,
       abstract,
       author,
+      publicationDate,
+      fileUrl: filename,
       documentType: "research paper",
     });
-    if (req.file) {
-      // Assuming file is attached to req via middleware like multer
-      const fileUploadResult = await uploadFileToS3(req.file);
-      newDocument.fileUrl = fileUploadResult.Location; // Store the URL of the uploaded file
-    }
+    // if (req.file) {
+    //   // Assuming file is attached to req via middleware like multer
+    //   const fileUploadResult = await uploadFileToS3(req.file);
+    //   newDocument.fileUrl = fileUploadResult.Location; // Store the URL of the uploaded file
+    // }
+    const savedDocument = await newDocument.save();
+    res.json(savedDocument);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const cTextDocument = async (req, res) => {
+  try {
+    const { title, abstract, author, publicationDate } = req.body;
+    const newDocument = new Document({
+      title,
+      abstract,
+      author,
+      publicationDate,
+      documentType: "text",
+      fileUrl: null,
+    });
     const savedDocument = await newDocument.save();
     res.json(savedDocument);
   } catch (error) {
@@ -96,6 +117,19 @@ const getAllDocuments = async (req, res) => {
   try {
     const documents = await Document.find();
     res.json(documents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const document = await Document.findById(id);
+    if (!document) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+    res.json(document);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -153,7 +187,7 @@ const getCommentsForDocument = async (req, res) => {
     const { id } = req.params; // Document ID from URL
     const comments = await Comment.find({ document: id }).populate(
       "createdBy",
-      "username -_id"
+      "username"
     );
 
     if (!comments.length) {
@@ -170,6 +204,33 @@ const getCommentsForDocument = async (req, res) => {
   }
 };
 
+const shareDocument = async (req, res) => {
+  try {
+    const { documentId } = req.params;
+    const { teamId } = req.body;
+
+    // Find the document
+    const document = await Document.findById(documentId);
+    if (!document) {
+      return res.status(404).json({ message: "Document not found." });
+    }
+
+    const team = await Team.findById(teamId);
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    team.documents.push(document._id);
+    await team.save();
+
+    res
+      .status(200)
+      .json({ message: "Document shared with the team successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getAllDocuments,
@@ -178,4 +239,7 @@ module.exports = {
   getCommentsForDocument,
   uploadDocumentToS3,
   getDocumentFromS3,
+  getDocument,
+  cTextDocument,
+  shareDocument,
 };
