@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from "../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
-
+//testing the login page and no error found
 function Login() {
 	const defaultTheme = createTheme();
 	const [userName, setUserName] = useState('');
@@ -48,7 +48,7 @@ function Login() {
 	// setTimeout(() => {
 	// 	handleLogin();
 	// }, 3 * 1000);
-
+	//fields to login
 	return (
 		<ThemeProvider theme={defaultTheme}>
 			<Container component="main" maxWidth="xs">
