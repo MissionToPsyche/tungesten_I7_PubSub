@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AddUser.css'; // Import the CSS file for styling
-
+//add user page and its inputs for details
 const AddUser = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -18,7 +18,7 @@ const AddUser = () => {
             [name]: value
         });
     };
-
+    //handling the submit and updating the databases
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -62,7 +62,7 @@ const AddUser = () => {
             console.error(error);
         }
     };
-
+    //all the details of the new user.
     return (
         <form className="form-container" onSubmit={handleSubmit}>
             <div>
