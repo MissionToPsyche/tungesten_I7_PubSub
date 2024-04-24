@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { Typography, Button, TextField, Stack, Autocomplete } from '@mui/material';
 
 export function NewTeam() {
@@ -7,10 +9,20 @@ export function NewTeam() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-       
-        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
 
-        setUsers(storedUsers.map(user => user.username));
+        const fetchUsers = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/auth/all-users');
+                const data = res.data;
+                setUsers(data.map(user => user.username));
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+        fetchUsers();
+        // const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+        // setUsers(storedUsers.map(user => user.username));
     }, []);
 
     const handleNameChange = (event) => {
@@ -18,35 +30,51 @@ export function NewTeam() {
     };
 
     const handleMembersChange = (event, values) => {
-        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const selectedUsers = storedUsers.filter(user => values.includes(user.username));
-        const selectedUsersData = selectedUsers.map(user => ({
-            username: user.username,
-            userId: user.userId,
-            role: user.role
-        }));
-        
-        setTeamMembers(selectedUsersData);
+        // const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+        // const selectedUsers = storedUsers.filter(user => values.includes(user.username));
+        // const selectedUsersData = selectedUsers.map(user => ({
+        //     username: user.username,
+        //     userId: user.userId,
+        //     role: user.role
+        // }));
+
+        setTeamMembers(values);
     };
+    // console.log("teamMembers", teamMembers);
+    // console.log("users", users)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+
         event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:3000/teams/createTeam', {
+                teamId: uuidv4(),
+                name: tName,
+                users: teamMembers,
+                documents: [], // Assuming no documents are added initially
+            });
+            console.log('New team created:', response.data.team);
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred while creating the team.');
+        }
+        // event.preventDefault();
 
-        
-        const existingTeams = JSON.parse(localStorage.getItem('teams')) || [];
 
-        
-        const newTeam = {
-            teamId: existingTeams.length + 1,
-            teamName: tName,
-            users: teamMembers
-        };
+        // const existingTeams = JSON.parse(localStorage.getItem('teams')) || [];
 
-        existingTeams.push(newTeam);
 
-        localStorage.setItem('teams', JSON.stringify(existingTeams));
+        // const newTeam = {
+        //     teamId: existingTeams.length + 1,
+        //     teamName: tName,
+        //     users: teamMembers
+        // };
 
-        console.log("New team added: ", newTeam);
+        // existingTeams.push(newTeam);
+
+        // localStorage.setItem('teams', JSON.stringify(existingTeams));
+
+        // console.log("New team added: ", newTeam);
     };
 
     return (
