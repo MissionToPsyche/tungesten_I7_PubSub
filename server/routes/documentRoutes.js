@@ -1,18 +1,43 @@
-const express = require('express');
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
+const express = require("express");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./files");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 const docRouter = express.Router();
-const { uploadDocument, getAllDocuments, getDocumentsByUsername, postNewCommentOnTheDocument, getCommentsForDocument } = require('../controllers/documentController');
+const {
+  uploadDocument,
+  getAllDocuments,
+  getDocumentsByUsername,
+  postNewCommentOnTheDocument,
+  getCommentsForDocument,
+  getDocument,
+  cTextDocument,
+  shareDocument,
+} = require("../controllers/documentController");
 // Login endpoint
-docRouter.post('/upload', upload.single('file'), uploadDocument);
+docRouter.post("/upload", upload.single("file"), uploadDocument);
 
-// Endpoint for adding a user
-docRouter.get('/fetchAll', getAllDocuments);
+docRouter.post("/create-text-document", cTextDocument);
 
-docRouter.get('/byOwner', getDocumentsByUsername);
+// Endpoint for fetching all documents
+docRouter.get("/fetchAll", getAllDocuments);
 
-docRouter.post('/documents/:id/comments', postNewCommentOnTheDocument);
+docRouter.get("/byOwner", getDocumentsByUsername);
 
-docRouter.get('/documents/:id/comments', getCommentsForDocument);
+docRouter.post("/documents/:id/comments", postNewCommentOnTheDocument);
+
+docRouter.get("/documents/:id/comments", getCommentsForDocument);
+
+// Endpoint for opening document
+docRouter.get("/documents/:id", getDocument);
+
+docRouter.post("/share/:documentId", shareDocument);
 
 module.exports = docRouter;

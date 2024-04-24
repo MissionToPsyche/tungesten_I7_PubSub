@@ -1,0 +1,38 @@
+Python 3.11.1 (v3.11.1:a7a450f84a, Dec  6 2022, 15:24:06) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
+Type "help", "copyright", "credits" or "license()" for more information.
+>>> print("Hello!")
+Hello!
+>>> 
+================ RESTART: /Users/victorolmos/Documents/Lab 1.py ================
+Hello!
+This is my first python program!
+>>> x=10
+>>> print(x)
+10
+>>> y=15
+>>> print(y)
+15
+>>> z=0.7
+>>> print(z)
+0.7
+>>> course_name="Introduction to Programming Logic"
+>>> print(course_name)
+Introduction to Programming Logic
+>>> a=True
+>>> b=False
+>>> sum=x+y
+>>> print(sum)
+25
+>>> x>y
+False
+>>> x!=y
+True
+>>> a and b
+False
+>>> a or b
+True
+>>> na=not a
+>>> print na
+SyntaxError: incomplete input
+>>> print(na)
+False
