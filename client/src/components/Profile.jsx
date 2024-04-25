@@ -32,13 +32,10 @@ function Profile() {
 			picSvg: '',
 			dob: '12/01/1999',
 			email: 'mpate133@asu.edu',
-			totalDocContribution: 3,
+			totalDocContribution: 2,
 			ownedDocs: [
 				{
 					docName: 'Owned demo doc 1',
-				},
-				{
-					docName: 'Owned demo doc 2'
 				}
 			],
 			sharedDocs: [
@@ -47,8 +44,6 @@ function Profile() {
 				}
 			]
 		};
-
-		// Developer testing is done for User Profile page
 
 		setUserInfo(info);
 	};
