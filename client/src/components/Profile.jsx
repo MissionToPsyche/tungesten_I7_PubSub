@@ -23,29 +23,24 @@ function Profile() {
 	}, []);
 
 	const setTempUserInfo = () => {
+		/* Below information is hard coded for now
+		*  it will be removed in future commits when
+		*  the backend is integrated with frontend.
+		*/
 		let info = {
 			name: 'Manan Patel',
 			picSvg: '',
 			dob: '12/01/1999',
 			email: 'mpate133@asu.edu',
-			totalDocContribution: 5,
+			totalDocContribution: 2,
 			ownedDocs: [
 				{
 					docName: 'Owned demo doc 1',
-				},
-				{
-					docName: 'Owned demo doc 2'
-				},
-				{
-					docName: 'Owned demo doc 3'
 				}
 			],
 			sharedDocs: [
 				{
 					docName: 'Shared doc with Jay'
-				},
-				{
-					docName: 'Shared doc with Swapnil'
 				}
 			]
 		};
