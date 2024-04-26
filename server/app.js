@@ -6,6 +6,7 @@ const docRouter = require('./routes/documentRoutes');
 const searchRouter = require('./routes/searchRoutes');
 const userSearchRouter = require('./routes/userSearch');
 const cors = require("cors");
+const accessRouter = require('./routes/accessRoutes');
 const app = express();
 
 // Middleware
@@ -29,6 +30,7 @@ app.use("/auth", authRouter);
 app.use("/docs", docRouter);
 app.use("/users", userSearchRouter);
 app.use("/search", searchRouter);
+app.use("/access", accessRouter);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

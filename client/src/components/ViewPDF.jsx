@@ -11,8 +11,9 @@ function ViewPDF() {//view pdf controller to show the contents
     const [pdfFile, setPDFFile] = useState(null)
     const [viewPdf, setViewPdf] = useState(null)
 
-
+    //testing done for this page no further error found
     const fileType = ['application/pdf']
+    //to handle the change of the file and reading the file
     const handleChange = (e) => {
         let selectedFile = e.target.files[0]
         if (selectedFile) {
@@ -31,7 +32,7 @@ function ViewPDF() {//view pdf controller to show the contents
             console.log("please select file")
         }
     }
-
+    //here it is handling the submission of the document and have document in the editor
     const handleSubmit = (e) => {
         e.preventDefault()
         if (pdfFile !== null) {
